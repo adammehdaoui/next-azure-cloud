@@ -4,9 +4,14 @@ import React, { createContext, useContext, useState } from "react";
 
 const SessionContext = createContext<SessionContextType>(null);
 
+export type User = {
+  login: string;
+  role: string;
+} | null;
+
 type SessionContextType = {
-  isConnected: boolean;
-  setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  userConnected: User;
+  setUserConnected: React.Dispatch<React.SetStateAction<User>>;
 } | null;
 
 export default function SessionProvider({
@@ -14,11 +19,11 @@ export default function SessionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [isConnected, setIsConnected] = useState(false);
+  const [userConnected, setUserConnected] = useState<User>(null);
 
   const contextValue: SessionContextType = {
-    isConnected,
-    setIsConnected,
+    userConnected,
+    setUserConnected,
   };
 
   return (
