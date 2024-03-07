@@ -1,8 +1,16 @@
 "use server";
 
 import { users } from "@/config/users";
-import type { User } from "@/contexts/authContext";
+import { sign, verify } from "jsonwebtoken";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+type Token = {
+  login: string;
+  role: string;
+  iat: number;
+  exp: number;
+};
 
 export async function connection(formData: FormData) {
   const userFound = users.find(
@@ -12,13 +20,28 @@ export async function connection(formData: FormData) {
   );
 
   if (userFound) {
+    const token = sign(
+      { login: userFound.name, role: userFound.role },
+      process.env.JWT_SECRET || "",
+      { expiresIn: "1h" }
+    );
+
+    console.log("user found " + JSON.stringify(userFound));
+
+    await setCookie(token);
+
     redirect("/admin");
   }
 
   throw new Error("User not found");
 }
 
-export async function getUserConnected(login: string): Promise<User> {
+export async function deconnection() {
+  cookies().delete("accessToken");
+  redirect("/");
+}
+
+export async function getUserConnected(login: string) {
   const userFound = users.find((user) => user.name === login);
 
   if (!userFound) {
@@ -26,4 +49,22 @@ export async function getUserConnected(login: string): Promise<User> {
   }
 
   return { login: userFound.name, role: userFound.role };
+}
+
+export async function setCookie(token: string) {
+  cookies().set("accessToken", token);
+}
+
+export async function getAccessToken() {
+  return JSON.stringify(cookies().get("accessToken"));
+}
+
+export async function validateToken(token: string) {
+  const decodedToken = verify(token, process.env.JWT_SECRET || "");
+
+  if (typeof decodedToken === "string") {
+    throw new Error("Invalid token type");
+  }
+
+  return decodedToken;
 }
