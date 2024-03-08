@@ -21,7 +21,7 @@ export async function connection(formData: FormData) {
 
     await setCookie(token);
 
-    redirect("/admin");
+    redirect("/dashboard");
   }
 
   throw new Error("User not found");

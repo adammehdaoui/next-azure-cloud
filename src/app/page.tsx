@@ -18,5 +18,5 @@ export default async function Home() {
     return <Form />;
   }
 
-  redirect("/admin");
+  redirect("/dashboard");
 }
