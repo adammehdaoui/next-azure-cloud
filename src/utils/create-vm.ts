@@ -61,8 +61,7 @@ const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 // Create resources then manage them (on/off)
 export async function launch() {
   try {
-    await createResources();
-    await manageResources();
+    return await createResources();
   } catch (err) {
     console.log(err);
   }
@@ -73,12 +72,15 @@ const createResources = async () => {
     await createResourceGroup();
     await createStorageAccount();
     await createVnet();
+
     subnetInfo = await getSubnetInfo();
     publicIPInfo = await createPublicIP();
+
     nicInfo = await createNIC(subnetInfo, publicIPInfo);
+
     vmImageInfo = await findVMImage();
     await createVirtualMachine(nicInfo.id, vmImageInfo[0].name);
-    return;
+    return publicIPInfo.dnsSettings.fqdn;
   } catch (err) {
     console.log(err);
   }
@@ -287,7 +289,7 @@ const listVirtualMachines = async () => {
   for await (const item of computeClient.virtualMachines.listAll()) {
     result.push(item);
   }
-  return result;
+  console.log(result);
 };
 
 function _generateRandomId(

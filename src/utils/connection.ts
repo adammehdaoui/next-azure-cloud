@@ -5,13 +5,6 @@ import { sign, verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-type Token = {
-  login: string;
-  role: string;
-  iat: number;
-  exp: number;
-};
-
 export async function connection(formData: FormData) {
   const userFound = users.find(
     (user) =>
@@ -25,8 +18,6 @@ export async function connection(formData: FormData) {
       process.env.JWT_SECRET || "",
       { expiresIn: "1h" }
     );
-
-    console.log("user found " + JSON.stringify(userFound));
 
     await setCookie(token);
 
