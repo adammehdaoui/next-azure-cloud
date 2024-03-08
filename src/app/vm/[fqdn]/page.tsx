@@ -1,20 +1,31 @@
 "use client";
 
+import VMLogin from "@/components/VMLogin";
 import { usePathname } from "next/navigation";
 
 export default function VM() {
-  const fqdn = usePathname().split("/")[2];
+  function copyToClipboard() {
+    navigator.clipboard.writeText("test");
+    console.log("test");
+  }
 
-  console.log(fqdn);
+  const fqdn = usePathname().split("/")[2];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="flex flex-col bg-white p-8 rounded shadow-md w-full md:w-2/3">
-        <h1>Informations de connexion à la machine virtuelle</h1>
-        <span>Nom de domaine pour la connexion : {fqdn}</span>
-        <span>Login : notadmin</span>
-        <span>Password : Pa$$w0rd92</span>
-        <pre>Pour se connecter en SSH : ssh notadmin@{fqdn}</pre>
+      <div className="flex flex-col bg-white p-8 rounded-xl shadow-md w-1/2 space-y-5">
+        <h1 className="text-xl">
+          Informations de connexion à la machine virtuelle
+        </h1>
+        <VMLogin
+          text={`Se connecter à la machine en SSH : ssh notadmin@${fqdn}`}
+          textToCopy={`ssh notadmin@${fqdn}`}
+        />
+        <VMLogin text={`Nom d'utilisateur : notadmin`} textToCopy="notadmin" />
+        <VMLogin
+          text={`Mot de passe pour se connecter : Pa$$w0rd92`}
+          textToCopy="Pa$$w0rd92"
+        />
       </div>
     </div>
   );

@@ -23,8 +23,8 @@ export default function Form() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
-        <h2 className="text-2xl font-semibold mb-6">Formulaire de connexion</h2>
+      <div className="bg-white p-8 rounded-xl shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
+        <h2 className="text-xl font-semibold mb-6">Formulaire de connexion</h2>
         <form action={handleConnection}>
           <div className="mb-4">
             <label

@@ -1,9 +1,11 @@
 "use client";
 
 import { deconnection } from "@/utils/connection";
+import { toast } from "sonner";
 
 function handleDeconnection() {
   deconnection();
+  toast.info("Vous êtes déconnecté");
 }
 
 export default function DeconnectionButton() {

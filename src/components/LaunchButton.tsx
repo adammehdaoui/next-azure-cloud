@@ -18,12 +18,14 @@ export default function LaunchButton({
   function handleClick() {
     creation();
 
-    toast.info("La VM est en cours de création");
+    toast.info(
+      "La VM est en cours de création, vous serez vers la page de connexion une fois qu'elle sera prête."
+    );
     setClicked(true);
   }
 
   return (
-    <div className="flex flex-col items-center border rounded p-3">
+    <div className="flex flex-col items-center border rounded-3xl p-3 w-1/3 shadow-md">
       <Image
         src={`/os/${image}`}
         alt="Lancer une VM"
