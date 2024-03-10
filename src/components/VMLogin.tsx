@@ -15,8 +15,8 @@ export default function VMLogin({
 
   return (
     <div>
-      <span>{text}</span>
-      <button onClick={copyToClipboard} className="ml-2">
+      <p className="overflow-scroll">{text}</p>
+      <button onClick={copyToClipboard} className="-mt-5 ml-3">
         <LuClipboardCopy />
       </button>
     </div>

@@ -7,6 +7,11 @@ import * as util from "util";
 
 type CachingTypes = "None" | "ReadOnly" | "ReadWrite";
 
+export type VMInfo = {
+  fqdn: string;
+  resourceGroupName: string;
+};
+
 // Store function output to be used elsewhere
 let randomIds: { [key: string]: string } = {};
 let subnetInfo: any = null;
@@ -58,7 +63,6 @@ const computeClient = new ComputeManagementClient(credentials, subscriptionId);
 const storageClient = new StorageManagementClient(credentials, subscriptionId);
 const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 
-// Create resources then manage them (on/off)
 export async function launch() {
   try {
     return await createResources();
@@ -67,7 +71,7 @@ export async function launch() {
   }
 }
 
-const createResources = async () => {
+const createResources = async (): Promise<VMInfo | undefined> => {
   try {
     await createResourceGroup();
     await createStorageAccount();
@@ -80,7 +84,11 @@ const createResources = async () => {
 
     vmImageInfo = await findVMImage();
     await createVirtualMachine(nicInfo.id, vmImageInfo[0].name);
-    return publicIPInfo.dnsSettings.fqdn;
+    console.log("VM at the moment : " + (await getVirtualMachines()));
+    return {
+      fqdn: publicIPInfo.dnsSettings.fqdn,
+      resourceGroupName: resourceGroupName,
+    };
   } catch (err) {
     console.log(err);
   }

@@ -17,9 +17,8 @@ export default function LaunchButton({
 
   function handleClick() {
     creation();
-
     toast.info(
-      "La VM est en cours de création, vous serez vers la page de connexion une fois qu'elle sera prête."
+      "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête."
     );
     setClicked(true);
   }
