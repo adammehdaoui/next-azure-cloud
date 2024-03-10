@@ -1,3 +1,5 @@
+"use server";
+
 import { ComputeManagementClient, VirtualMachine } from "@azure/arm-compute";
 import { NetworkManagementClient } from "@azure/arm-network";
 import { ResourceManagementClient } from "@azure/arm-resources";

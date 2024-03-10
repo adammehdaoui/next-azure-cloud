@@ -1,3 +1,5 @@
+"use server";
+
 import { ResourceManagementClient } from "@azure/arm-resources";
 import { DefaultAzureCredential } from "@azure/identity";
 
@@ -9,6 +11,21 @@ const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID;
 
 if (!clientId || !domain || !secret || !subscriptionId) {
   throw new Error("Default credentials couldn't be found");
+}
+
+export async function delayedCleanup(
+  resourceGroupName: string
+): Promise<() => void> {
+  console.log("Lancement du minuteur de suppression de la machine virtuelle");
+
+  const timeout = setTimeout(() => {
+    console.log("Suppression de la machine virtuelle");
+    launchCleanup(resourceGroupName);
+  }, 10);
+
+  return () => {
+    clearTimeout(timeout);
+  };
 }
 
 export async function launchCleanup(resourceGroupName: string): Promise<void> {
