@@ -16,7 +16,7 @@ export default async function Admin() {
       console.error(
         "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
       );
-      redirect(`/dashboard/error`);
+      redirect("/dashboard?error=true");
     }
   }
 

@@ -40,7 +40,8 @@ export default function AdminView({
   useEffect(() => {
     error &&
       toast.error(
-        "Erreur dans la création de la machine virtuelle, veuillez réessayer. (L'ID généré est peut-être déjà utilisé)"
+        "Erreur dans la création de la machine virtuelle, veuillez réessayer. (L'ID généré est peut-être déjà utilisé)",
+        { duration: 60000 }
       );
   }, [error]);
 

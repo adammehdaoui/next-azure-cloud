@@ -317,12 +317,27 @@ function _generateRandomId(
   prefix: string,
   existIds: { [key: string]: string }
 ): string {
-  var newNumber;
+  const characters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const idLength = 8;
+
+  const generateRandomString = (): string => {
+    let result = "";
+    for (let i = 0; i < idLength; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
+
+  let newId;
   while (true) {
-    newNumber = prefix + Math.floor(Math.random() * 10000);
-    if (!existIds || !(newNumber in existIds)) {
+    newId = prefix + generateRandomString();
+    if (!existIds || !(newId in existIds)) {
       break;
     }
   }
-  return newNumber;
+
+  return newId;
 }

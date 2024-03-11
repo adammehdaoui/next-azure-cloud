@@ -19,7 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="fr">
       <body className={poppins.className}>
-        <Toaster position="bottom-right" richColors />
+        <Toaster position="bottom-right" richColors closeButton  />
         <Navbar />
         <main>{children}</main>
       </body>
