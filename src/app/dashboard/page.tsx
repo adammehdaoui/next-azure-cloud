@@ -2,7 +2,6 @@ import AdminView from "@/components/AdminView";
 import { getAccessToken, validateToken } from "@/utils/connection";
 import { launch } from "@/utils/create-vm";
 import { redirect } from "next/navigation";
-import { toast } from "sonner";
 
 export default async function Admin() {
   async function handleCreation() {
@@ -11,12 +10,13 @@ export default async function Admin() {
     const VMState = await launch();
 
     if (VMState) {
-      const { fqdn, resourceGroupName } = VMState;
-      redirect(`/vm/${fqdn}/${resourceGroupName}`);
+      const { fqdn } = VMState;
+      redirect(`/vm/${fqdn}`);
     } else {
-      toast.error(
+      console.error(
         "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
       );
+      redirect(`/dashboard/error`);
     }
   }
 

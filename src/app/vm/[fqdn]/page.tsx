@@ -1,5 +1,5 @@
 import VMLogin from "@/components/VMLogin";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VMStateView() {
@@ -8,7 +8,7 @@ export default function VMStateView() {
   toast.info("La machine virtuelle sera supprimée dans 10 minutes");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 w-full">
+    <div className="h-screen flex items-center justify-center bg-gray-100 w-full">
       <div className="flex flex-col bg-white p-8 rounded-xl shadow-md w-1/2 space-y-5">
         <h1 className="text-xl">
           Informations de connexion à la machine virtuelle

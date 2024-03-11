@@ -8,10 +8,12 @@ export default function LaunchButton({
   creation,
   name,
   image,
+  loading,
 }: {
   creation: () => void;
   name: string;
   image: string;
+  loading: boolean;
 }) {
   const [clicked, setClicked] = useState(false);
 
@@ -35,7 +37,7 @@ export default function LaunchButton({
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-red active:bg-blue-800 mt-4 disabled:opacity-50 disabled:cursor-wait"
         onClick={handleClick}
-        disabled={clicked}
+        disabled={clicked || loading}
       >
         Lancer une VM
       </button>

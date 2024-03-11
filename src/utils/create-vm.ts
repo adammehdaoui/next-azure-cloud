@@ -7,6 +7,8 @@ import { StorageManagementClient } from "@azure/arm-storage";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as util from "util";
 
+import { delayedCleanup } from "@/utils/cleanup-vm";
+
 type CachingTypes = "None" | "ReadOnly" | "ReadWrite";
 
 export type VMInfo = {
@@ -67,6 +69,15 @@ const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 
 export async function launch() {
   try {
+    const toClean = await createResources();
+
+    if (toClean === undefined) {
+      throw new Error(
+        "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
+      );
+    }
+
+    delayedCleanup(toClean.resourceGroupName);
     return await createResources();
   } catch (err) {
     console.log(err);
