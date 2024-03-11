@@ -1,36 +1,49 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Next Azure Cloud
 
-First, run the development server:
+### Authentification
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+L'accès à la plateforme nécessite une authentification. Trois utilisateurs ont été préconfigurés pour faciliter le processus. Veuillez utiliser les informations d'identification suivantes :
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Utilisateur 1 :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Login: user_admin
+Mot de passe: user_admin
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Utilisateur 2 :
 
-## Learn More
+Login: user
+Mot de passe: user
 
-To learn more about Next.js, take a look at the following resources:
+Utilisateur 3 :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Login: user_nothing
+Mot de passe: user_nothing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Autorisations des utilisateurs
 
-## Deploy on Vercel
+#### Accès à une machine
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Chaque utilisateur a accès à une machine préconfigurée pour ses tests.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Systèmes d'exploitation
+
+Choisissez parmi plusieurs systèmes d'exploitation pour votre machine de test.
+Lancement d'une Machine
+
+#### Comment lancer une machine ?
+
+Connectez-vous et utilisez l'interface pour lancer votre machine de test.
+
+### Paramètres de connexion
+
+Une fois la machine créée, les paramètres de connexion (RDP et/ou SSH) seront affichés.
+
+### Durée de dession
+
+Votre session restera active pendant 10 minutes. Soyez attentif à la notification de fin de session.
+
+### Notification de fin de session
+
+Recevez une notification lorsque votre session approche de la fin. Sauvegardez votre travail avant la déconnexion.
