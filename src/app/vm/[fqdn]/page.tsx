@@ -1,9 +1,11 @@
+"use client";
+
 import VMLogin from "@/components/VMLogin";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VMStateView() {
-  const fqdn = usePathname().split("/")[2];
+  const { fqdn } = useParams();
 
   toast.info("La machine virtuelle sera supprimée dans 10 minutes");
 

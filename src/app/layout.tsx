@@ -1,10 +1,10 @@
 import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const poppins = Poppins({ subsets: ["latin"], weight: "600" });
+const inter = Inter({ subsets: ["latin"], weight: "500" });
 
 export const metadata: Metadata = {
   title: "Next Azure Cloud",
@@ -18,8 +18,8 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={poppins.className}>
-        <Toaster position="bottom-right" richColors closeButton  />
+      <body className={`${inter.className} bg-gray-100 tracking-tight`}>
+        <Toaster position="bottom-right" richColors closeButton />
         <Navbar />
         <main>{children}</main>
       </body>

@@ -1,12 +1,20 @@
 "use client";
 
 import { connection } from "@/utils/connection";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Form() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+
+  const requestError = !!useSearchParams().get("error");
+
+  if (requestError) {
+    toast.error("Vous n'aviez pas les droits pour accéder à cette page");
+  }
 
   async function handleConnection() {
     try {
@@ -22,7 +30,7 @@ export default function Form() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center mt-56">
       <div className="bg-white p-8 rounded-xl shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
         <h2 className="text-xl font-semibold mb-6">Formulaire de connexion</h2>
         <form action={handleConnection}>

@@ -20,13 +20,14 @@ export default function LaunchButton({
   function handleClick() {
     creation();
     toast.info(
-      "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête."
+      "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
+      { duration: 30000 }
     );
     setClicked(true);
   }
 
   return (
-    <div className="flex flex-col items-center border rounded-3xl p-3 w-1/3 shadow-md">
+    <div className="flex flex-col items-center border rounded-3xl p-3 w-full shadow-md">
       <Image
         src={`/os/${image}`}
         alt="Lancer une VM"
@@ -35,7 +36,7 @@ export default function LaunchButton({
       />
       <h2 className="text-lg mt-5">{name}</h2>
       <button
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-red active:bg-blue-800 mt-4 disabled:opacity-50 disabled:cursor-wait"
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:shadow-outline-red active:bg-blue-800 mt-4 disabled:opacity-50 disabled:cursor-wait"
         onClick={handleClick}
         disabled={clicked || loading}
       >

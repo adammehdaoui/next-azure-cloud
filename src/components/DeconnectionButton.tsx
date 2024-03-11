@@ -8,11 +8,15 @@ function handleDeconnection() {
   toast.info("Vous êtes déconnecté");
 }
 
-export default function DeconnectionButton() {
+export default function DeconnectionButton({
+  isMenuOpen,
+}: {
+  isMenuOpen: boolean;
+}) {
   return (
     <button
       onClick={handleDeconnection}
-      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:shadow-outline-red active:bg-red-800 mt-4 ml-4"
+      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:shadow-outline-red active:bg-red-800 mt-4 ml-4 hidden sm:block"
     >
       Se déconnecter
     </button>

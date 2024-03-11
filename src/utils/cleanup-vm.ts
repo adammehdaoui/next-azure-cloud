@@ -21,7 +21,7 @@ export async function delayedCleanup(
   const timeout = setTimeout(() => {
     console.log("Suppression de la machine virtuelle");
     launchCleanup(resourceGroupName);
-  }, 10);
+  }, 60000);
 
   return () => {
     clearTimeout(timeout);

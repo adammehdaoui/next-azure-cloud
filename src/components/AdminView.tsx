@@ -1,7 +1,7 @@
 "use client";
 
 import LaunchButton from "@/components/LaunchButton";
-import { usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ export default function AdminView({
   role: string;
   creation: () => void;
 }) {
-  const error = usePathname().includes("error");
+  const error = !!useSearchParams().get("error");
 
   const os = [
     {
@@ -40,13 +40,13 @@ export default function AdminView({
   useEffect(() => {
     error &&
       toast.error(
-        "Erreur dans la création de la machine virtuelle, veuillez réessayer. (L'ID généré est peut-être déjà utilisé)",
+        "Erreur dans la création de la machine virtuelle, veuillez réesayer. Erreur probable : 3 machines virtuelles sont déjà en cours d'utilisation.",
         { duration: 60000 }
       );
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center mt-56">
       <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
         <div className="flex justify-center text-xl w-full">
           Bienvenue, vous êtes connecté en tant que : {role}

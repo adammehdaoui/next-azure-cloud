@@ -317,8 +317,7 @@ function _generateRandomId(
   prefix: string,
   existIds: { [key: string]: string }
 ): string {
-  const characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
   const idLength = 8;
 
   const generateRandomString = (): string => {
@@ -334,7 +333,10 @@ function _generateRandomId(
   let newId;
   while (true) {
     newId = prefix + generateRandomString();
-    if (!existIds || !(newId in existIds)) {
+    if (
+      !existIds ||
+      (!(newId in existIds) && newId.length >= 3 && newId.length <= 24)
+    ) {
       break;
     }
   }

@@ -23,7 +23,7 @@ export default async function Admin() {
   const token = await getAccessToken();
 
   if (token === undefined) {
-    redirect("/");
+    redirect("/?error=true");
   }
 
   const tokenValue = JSON.parse(token).value;
@@ -36,6 +36,6 @@ export default async function Admin() {
     return <AdminView role={role} creation={handleCreation} />;
   } catch (error) {
     console.error(error);
-    redirect("/");
+    redirect("/?error=true");
   }
 }
