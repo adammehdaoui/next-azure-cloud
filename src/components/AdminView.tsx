@@ -6,43 +6,36 @@ import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
 
+import { vms } from "@/config/vms";
+
 export default function AdminView({
   role,
   creation,
 }: {
   role: string;
-  creation: () => void;
+  creation: (
+    publisher: string | undefined,
+    offer: string | undefined,
+    sku: string | undefined
+  ) => void;
 }) {
   const error = !!useSearchParams().get("error");
 
-  const os = [
-    {
-      name: "RedHat",
-      image: "redHat.svg",
-    },
-    {
-      name: "Windows",
-      image: "windows.svg",
-    },
-    {
-      name: "Ubuntu",
-      image: "ubuntu.svg",
-    },
-  ];
-
   const [loading, setLoading] = useState(false);
 
-  function handleCreation() {
+  function handleCreation(publisher: string | undefined, offer: string | undefined, sku: string | undefined) {
     setLoading(true);
-    creation();
+    creation(publisher, offer, sku);
   }
 
   useEffect(() => {
-    error &&
+    if (error) {
       toast.error(
         "Erreur dans la création de la machine virtuelle, veuillez réesayer. Erreur probable : 3 machines virtuelles sont déjà en cours d'utilisation.",
         { duration: 60000 }
       );
+      setLoading(false);
+    }
   }, [error]);
 
   return (
@@ -65,7 +58,7 @@ export default function AdminView({
           <>
             {role === "admin" && (
               <div className="flex space-x-5">
-                {os.map((os, index) => (
+                {vms.map((os, index) => (
                   <LaunchButton
                     creation={handleCreation}
                     name={os.name}

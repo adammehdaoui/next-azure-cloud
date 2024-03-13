@@ -19,7 +19,9 @@ export async function delayedCleanup(
   console.log("Lancement du minuteur de suppression de la machine virtuelle");
 
   const timeout = setTimeout(() => {
-    console.log("Suppression de la machine virtuelle");
+    console.log(
+      "La suppression de la machine virtuelle est en cours. Veuillez ne pas quitter la page."
+    );
     launchCleanup(resourceGroupName);
   }, 60000);
 

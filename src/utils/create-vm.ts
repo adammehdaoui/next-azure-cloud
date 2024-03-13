@@ -7,9 +7,7 @@ import { StorageManagementClient } from "@azure/arm-storage";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as util from "util";
 
-import { delayedCleanup } from "@/utils/cleanup-vm";
-
-type CachingTypes = "None" | "ReadOnly" | "ReadWrite";
+import { delayedCleanup, launchCleanup } from "@/utils/cleanup-vm";
 
 export type VMInfo = {
   fqdn: string;
@@ -39,10 +37,6 @@ const osDiskName = _generateRandomId("testosdisk", randomIds);
 const location = "eastus";
 const accType = "Standard_LRS";
 
-// Ubuntu config for VM
-const publisher = "Canonical";
-const offer = "UbuntuServer";
-const sku = "14.04.3-LTS";
 const adminUsername = "notadmin";
 const adminPassword = "Pa$$w0rd92";
 
@@ -67,9 +61,19 @@ const computeClient = new ComputeManagementClient(credentials, subscriptionId);
 const storageClient = new StorageManagementClient(credentials, subscriptionId);
 const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 
-export async function launch() {
+export async function launch(
+  publisher: string | undefined,
+  offer: string | undefined,
+  sku: string | undefined
+) {
+  if (!publisher || !offer || !sku) {
+    throw new Error(
+      "Il manque des informations pour lancer la machine virtuelle. Veuillez réessayer."
+    );
+  }
+
   try {
-    const toClean = await createResources();
+    const toClean = await createResources(publisher, offer, sku);
 
     if (toClean === undefined) {
       throw new Error(
@@ -78,13 +82,18 @@ export async function launch() {
     }
 
     delayedCleanup(toClean.resourceGroupName);
-    return await createResources();
+    return toClean;
   } catch (err) {
+    launchCleanup(resourceGroupName);
     console.log(err);
   }
 }
 
-const createResources = async (): Promise<VMInfo | undefined> => {
+const createResources = async (
+  publisher: string,
+  offer: string,
+  sku: string
+): Promise<VMInfo | undefined> => {
   try {
     await createResourceGroup();
     await createStorageAccount();
@@ -95,8 +104,14 @@ const createResources = async (): Promise<VMInfo | undefined> => {
 
     nicInfo = await createNIC(subnetInfo, publicIPInfo);
 
-    vmImageInfo = await findVMImage();
-    await createVirtualMachine(nicInfo.id, vmImageInfo[0].name);
+    vmImageInfo = await findVMImage(publisher, offer, sku);
+    await createVirtualMachine(
+      nicInfo.id,
+      vmImageInfo[0].name,
+      publisher,
+      offer,
+      sku
+    );
     console.log("VM at the moment : " + (await getVirtualMachines()));
     return {
       fqdn: publicIPInfo.dnsSettings.fqdn,
@@ -203,7 +218,7 @@ const createNIC = async (subnetInfo: any, publicIPInfo: any) => {
   );
 };
 
-const findVMImage = async () => {
+const findVMImage = async (publisher: string, offer: string, sku: string) => {
   console.log(
     util.format(
       "\nFinding a VM Image for location %s from " +
@@ -225,7 +240,10 @@ const findVMImage = async () => {
 
 const createVirtualMachine = async (
   nicId: string,
-  vmImageVersionNumber: string
+  vmImageVersionNumber: string,
+  publisher: string,
+  offer: string,
+  sku: string
 ) => {
   const vmParameters: VirtualMachine = {
     location: location,
@@ -246,13 +264,9 @@ const createVirtualMachine = async (
       },
       osDisk: {
         name: osDiskName,
-        caching: "None" as CachingTypes, // Spécifiez explicitement le type correct
-        createOption: "fromImage",
-        vhd: {
-          uri:
-            "https://" +
-            storageAccountName +
-            ".blob.core.windows.net/nodejscontainer/osnodejslinux.vhd",
+        createOption: "FromImage",
+        managedDisk: {
+          storageAccountType: "Standard_LRS",
         },
       },
     },
