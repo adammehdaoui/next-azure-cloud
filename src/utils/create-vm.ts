@@ -127,7 +127,7 @@ const createResourceGroup = async () => {
     location: location,
     tags: { sampletag: "sampleValue" },
   };
-  console.log("\n1.Creating resource group: " + resourceGroupName);
+  console.log("\n1.Creating resource group : " + resourceGroupName);
   return await resourceClient.resourceGroups.createOrUpdate(
     resourceGroupName,
     groupParameters
@@ -135,7 +135,7 @@ const createResourceGroup = async () => {
 };
 
 const createStorageAccount = async () => {
-  console.log("\n2.Creating storage account: " + storageAccountName);
+  console.log("\n2.Creating storage account : " + storageAccountName);
   const createParameters = {
     location: location,
     sku: {
@@ -165,7 +165,7 @@ const createVnet = async () => {
     },
     subnets: [{ name: subnetName, addressPrefix: "10.0.0.0/24" }],
   };
-  console.log("\n3.Creating vnet: " + vnetName);
+  console.log("\n3.Creating vnet : " + vnetName);
   return await networkClient.virtualNetworks.beginCreateOrUpdateAndWait(
     resourceGroupName,
     vnetName,
@@ -174,7 +174,7 @@ const createVnet = async () => {
 };
 
 const getSubnetInfo = async () => {
-  console.log("\nGetting subnet info for: " + subnetName);
+  console.log("\nGetting subnet info for : " + subnetName);
   return await networkClient.subnets.get(
     resourceGroupName,
     vnetName,
@@ -188,9 +188,9 @@ const createPublicIP = async () => {
     publicIPAllocationMethod: "Dynamic",
     dnsSettings: {
       domainNameLabel: domainNameLabel,
-    },
+    }, 
   };
-  console.log("\n4.Creating public IP: " + publicIPName);
+  console.log("\n4.Creating public IP : " + publicIPName);
   return await networkClient.publicIPAddresses.beginCreateOrUpdateAndWait(
     resourceGroupName,
     publicIPName,
@@ -210,7 +210,7 @@ const createNIC = async (subnetInfo: any, publicIPInfo: any) => {
       },
     ],
   };
-  console.log("\n5.Creating Network Interface: " + networkInterfaceName);
+  console.log("\n5.Creating Network Interface : " + networkInterfaceName);
   return await networkClient.networkInterfaces.beginCreateOrUpdateAndWait(
     resourceGroupName,
     networkInterfaceName,
@@ -279,7 +279,7 @@ const createVirtualMachine = async (
       ],
     },
   };
-  console.log("6.Creating Virtual Machine: " + vmName);
+  console.log("6.Creating Virtual Machine : " + vmName);
   console.log(
     " VM create parameters: " + util.inspect(vmParameters, { depth: null })
   );
@@ -290,6 +290,7 @@ const createVirtualMachine = async (
   );
 };
 
+// Unused for now
 const manageResources = async () => {
   await getVirtualMachines();
   await turnOffVirtualMachines();

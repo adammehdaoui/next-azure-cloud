@@ -23,8 +23,6 @@ export default function LaunchButton({
   function handleClick() {
     const vm = vms.find((vm) => vm.name === name);
 
-    console.log(vm?.name);
-
     creation(vm?.publisher, vm?.offer, vm?.sku);
     toast.info(
       "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",

@@ -23,7 +23,11 @@ export default function AdminView({
 
   const [loading, setLoading] = useState(false);
 
-  function handleCreation(publisher: string | undefined, offer: string | undefined, sku: string | undefined) {
+  function handleCreation(
+    publisher: string | undefined,
+    offer: string | undefined,
+    sku: string | undefined
+  ) {
     setLoading(true);
     creation(publisher, offer, sku);
   }
@@ -41,9 +45,14 @@ export default function AdminView({
   return (
     <div className="flex items-center justify-center mt-56">
       <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
-        <div className="flex justify-center text-xl w-full">
+        <p className="flex justify-center text-xl w-full">
           Bienvenue, vous êtes connecté en tant que : {role}
-        </div>
+        </p>
+        {role === "user" && (
+          <p className="mt-3">
+            Vous n&rsquo;avez aucun crédit pour lancer une machine virtuelle...
+          </p>
+        )}
         <div className="flex justify-evenly mt-10 w-full">
           <>
             {role === "contributor" && (
