@@ -48,14 +48,14 @@ export default function AdminView({
         <p className="flex justify-center text-xl w-full">
           Bienvenue, vous êtes connecté en tant que : {role}
         </p>
-        {role === "user" && (
+        {role === "restricedUser" && (
           <p className="mt-3">
             Vous n&rsquo;avez aucun crédit pour lancer une machine virtuelle...
           </p>
         )}
         <div className="flex justify-evenly mt-10 w-full">
           <>
-            {role === "contributor" && (
+            {role === "limitedUser" && (
               <LaunchButton
                 creation={handleCreation}
                 name="Ubuntu"
@@ -65,7 +65,7 @@ export default function AdminView({
             )}
           </>
           <>
-            {role === "admin" && (
+            {role === "powerUser" && (
               <div className="flex space-x-5">
                 {vms.map((os, index) => (
                   <LaunchButton
