@@ -2,7 +2,7 @@
 
 import { connection } from "@/utils/connection";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function Form() {
@@ -12,9 +12,11 @@ export default function Form() {
 
   const requestError = !!useSearchParams().get("error");
 
-  if (requestError) {
-    toast.error("Vous n'aviez pas les droits pour accéder à cette page");
-  }
+  useEffect(() => {
+    if (requestError) {
+      toast.error("Vous n'aviez pas les droits pour accéder à cette page");
+    }
+  }, [requestError]);
 
   async function handleConnection() {
     try {

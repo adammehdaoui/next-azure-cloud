@@ -59,3 +59,11 @@ export async function validateToken(token: string) {
 
   return decodedToken;
 }
+
+export async function getRole() {
+  const token = await getAccessToken();
+
+  const decodedToken = await validateToken(token);
+
+  return decodedToken.role;
+}
