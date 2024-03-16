@@ -112,7 +112,6 @@ const createResources = async (
       offer,
       sku
     );
-    console.log("VM at the moment : " + (await getVirtualMachines()));
     return {
       fqdn: publicIPInfo.dnsSettings.fqdn,
       resourceGroupName: resourceGroupName,
@@ -188,7 +187,7 @@ const createPublicIP = async () => {
     publicIPAllocationMethod: "Dynamic",
     dnsSettings: {
       domainNameLabel: domainNameLabel,
-    }, 
+    },
   };
   console.log("\n4.Creating public IP : " + publicIPName);
   return await networkClient.publicIPAddresses.beginCreateOrUpdateAndWait(

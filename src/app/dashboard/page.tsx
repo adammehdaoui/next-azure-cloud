@@ -15,6 +15,9 @@ export default async function Admin() {
 
     if (VMState) {
       const { fqdn } = VMState;
+      console.log(
+        "La machine virtuelle a été créée avec succès. Redirection..."
+      );
       redirect(`/vm/${fqdn}`);
     } else {
       console.error(
