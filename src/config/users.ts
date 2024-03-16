@@ -1,17 +1,17 @@
 export const users = [
   {
-    name: "adam",
-    password: "user_power",
+    name: "user-admin",
+    password: "user-power",
     role: "powerUser",
   },
   {
-    name: "alexis",
-    password: "user_limited",
+    name: "user-contributor",
+    password: "user-limited",
     role: "limitedUser",
   },
   {
-    name: "louis",
-    password: "user_restricted",
+    name: "user-restricted",
+    password: "user-restricted",
     role: "restricedUser",
   },
 ];

@@ -1,6 +1,6 @@
 import Form from "@/components/Form";
 import { getAccessToken, validateToken } from "@/utils/connection";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 
 export default async function Home() {
   const token = await getAccessToken();
@@ -18,5 +18,6 @@ export default async function Home() {
     return <Form />;
   }
 
-  redirect("/dashboard");
+  redirect("/dashboard", RedirectType.push);
 }
+                                                                                                                                                                                                                                            

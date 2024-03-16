@@ -51,19 +51,21 @@ export async function getAccessToken() {
 }
 
 export async function validateToken(token: string) {
-  const decodedToken = verify(token, process.env.JWT_SECRET || "");
+  try {
+    const decodedToken = verify(token, process.env.JWT_SECRET || "");
 
-  if (typeof decodedToken === "string") {
-    throw new Error("Invalid token type");
+    if (typeof decodedToken === "string") {
+      throw new Error("Invalid token type");
+    }
+
+    return decodedToken;
+  } catch (error) {
+    console.error(error);
   }
-
-  return decodedToken;
 }
 
-export async function getRole() {
-  const token = await getAccessToken();
-
+export async function getRole(token: string): Promise<string | undefined> {
   const decodedToken = await validateToken(token);
 
-  return decodedToken.role;
+  return decodedToken?.role;
 }

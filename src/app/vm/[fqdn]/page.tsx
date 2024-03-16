@@ -1,21 +1,29 @@
-import { getAccessToken, validateToken } from "@/utils/connection";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function VMStateView() {
-  const token = await getAccessToken();
+import VMLogin from "@/components/VMLogin";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
-  if (token === undefined) {
-    redirect("/?error=true");
-  }
+export default function VMStateView() {
+  const { fqdn } = useParams();
 
-  const tokenValue = JSON.parse(token).value;
+  toast.info("La machine virtuelle sera supprimée dans 10 minutes");
 
-  try {
-    await validateToken(tokenValue);
-
-    return <VMStateView />;
-  } catch (error) {
-    console.error(error);
-    redirect("/?error=true");
-  }
+  return (
+    <div className="h-screen flex items-center justify-center bg-gray-100 w-full">
+      <div className="flex flex-col bg-white p-8 rounded-xl shadow-md w-1/2 space-y-5">
+        <h1 className="text-xl">
+          Informations de connexion à la machine virtuelle
+        </h1>
+        <VMLogin
+          text={`Se connecter à la machine en SSH avec la commande : ssh notadmin@${fqdn}`}
+          textToCopy={`ssh notadmin@${fqdn}`}
+        />
+        <VMLogin
+          text={`Mot de passe pour se connecter : Pa$$w0rd92`}
+          textToCopy="Pa$$w0rd92"
+        />
+      </div>
+    </div>
+  );
 }

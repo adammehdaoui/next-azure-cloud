@@ -1,48 +1,53 @@
 import AdminView from "@/components/AdminView";
-import { getAccessToken, validateToken } from "@/utils/connection";
+import { getAccessToken, getRole } from "@/utils/connection";
 import { launch } from "@/utils/create-vm";
 import { redirect } from "next/navigation";
 
-export default async function Admin() {
-  async function handleCreation(
-    publisher: string | undefined,
-    offer: string | undefined,
-    sku: string | undefined
-  ) {
-    "use server";
+async function getFQDN(
+  publisher: string | undefined,
+  offer: string | undefined,
+  sku: string | undefined
+) {
+  const VMState = await launch(publisher, offer, sku);
 
-    const VMState = await launch(publisher, offer, sku);
-
-    if (VMState) {
-      const { fqdn } = VMState;
-      console.log(
-        "La machine virtuelle a été créée avec succès. Redirection..."
-      );
-      redirect(`/vm/${fqdn}`);
-    } else {
-      console.error(
-        "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
-      );
-      redirect("/dashboard?error=true");
-    }
+  if (!VMState) {
+    return redirect("/dashboard?error=true");
   }
 
+  const { fqdn } = VMState;
+  return fqdn;
+}
+
+async function handleCreation(
+  publisher: string | undefined,
+  offer: string | undefined,
+  sku: string | undefined
+) {
+  "use server";
+
+  const fqdn = await getFQDN(publisher, offer, sku);
+
+  if (fqdn === undefined) {
+    return redirect("/dashboard?error=true");
+  }
+
+  return redirect(`/vm/${fqdn}`);
+}
+
+export default async function Admin() {
   const token = await getAccessToken();
 
   if (token === undefined) {
-    redirect("/?error=true");
+    return redirect("/?error=true");
   }
 
   const tokenValue = JSON.parse(token).value;
 
-  try {
-    const decodedToken = await validateToken(tokenValue);
+  const role = await getRole(tokenValue);
 
-    const role = decodedToken.role;
-
-    return <AdminView role={role} creation={handleCreation} />;
-  } catch (error) {
-    console.error(error);
-    redirect("/?error=true");
+  if (role === "undefined") {
+    return redirect("/?error=true");
   }
+
+  return <AdminView role={role} creation={handleCreation} />;
 }

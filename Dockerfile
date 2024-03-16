@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:18-alpine
 
 # Création du répertoire de travail
 WORKDIR /app
@@ -11,7 +11,9 @@ RUN npm install
 # Copie du code source
 COPY . .
 
+CMD ls -la
+
 EXPOSE 3000
 
-# Lancement du dev Next
-CMD npm run dev
+# Lancement du serveur de production Next
+CMD npm run start

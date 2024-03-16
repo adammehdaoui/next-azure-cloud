@@ -12,7 +12,7 @@ export default function AdminView({
   role,
   creation,
 }: {
-  role: string;
+  role: string | undefined;
   creation: (
     publisher: string | undefined,
     offer: string | undefined,
