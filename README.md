@@ -84,3 +84,16 @@ Utilisateur pouvant lancer **trois machines virtuelles avec un OS différent** (
 
 Login : adam
 Mot de passe: user_power
+
+## Connection aux machines virtuelles
+
+### Machines Unix
+
+Appliquer les commandes qui seront affichées dans l'application lorsque vous serez redirigé vers la page de la machine virtuelle.
+Le port 22 (SSH) est ouvert par défaut.
+
+### Machines Windows (Testé sous MacOS)
+
+Pour se connecter à une machine virtuelle Windows, il vous faudra pouvoir utiliser le protocole RDP.
+Pour cela, vous pouvez utiliser l'application **Microsoft Remote Desktop** disponible sur l'App Store.
+Il y a également la possibilité d'utiliser le client open-source **FreeRDP**.

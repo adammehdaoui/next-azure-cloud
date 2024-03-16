@@ -22,16 +22,16 @@ let vmImageInfo: any = null;
 let nicInfo: any = null;
 
 //Random number generator for service names and settings
-const resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
-const vmName = _generateRandomId("testvm", randomIds);
-const storageAccountName = _generateRandomId("testac", randomIds);
-const vnetName = _generateRandomId("testvnet", randomIds);
-const subnetName = _generateRandomId("testsubnet", randomIds);
-const publicIPName = _generateRandomId("testpip", randomIds);
-const networkInterfaceName = _generateRandomId("testnic", randomIds);
-const ipConfigName = _generateRandomId("testcrpip", randomIds);
-const domainNameLabel = _generateRandomId("testdomainname", randomIds);
-const osDiskName = _generateRandomId("testosdisk", randomIds);
+let resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+let vmName = _generateRandomId("testvm", randomIds);
+let storageAccountName = _generateRandomId("testac", randomIds);
+let vnetName = _generateRandomId("testvnet", randomIds);
+let subnetName = _generateRandomId("testsubnet", randomIds);
+let publicIPName = _generateRandomId("testpip", randomIds);
+let networkInterfaceName = _generateRandomId("testnic", randomIds);
+let ipConfigName = _generateRandomId("testcrpip", randomIds);
+let domainNameLabel = _generateRandomId("testdomainname", randomIds);
+let osDiskName = _generateRandomId("testosdisk", randomIds);
 
 // Resource configs
 const location = "eastus";
@@ -82,10 +82,35 @@ export async function launch(
     }
 
     delayedCleanup(toClean.resourceGroupName);
+
+    //Regenerate randomIds
+    resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+    vmName = _generateRandomId("testvm", randomIds);
+    storageAccountName = _generateRandomId("testac", randomIds);
+    vnetName = _generateRandomId("testvnet", randomIds);
+    subnetName = _generateRandomId("testsubnet", randomIds);
+    publicIPName = _generateRandomId("testpip", randomIds);
+    networkInterfaceName = _generateRandomId("testnic", randomIds);
+    ipConfigName = _generateRandomId("testcrpip", randomIds);
+    domainNameLabel = _generateRandomId("testdomainname", randomIds);
+    osDiskName = _generateRandomId("testosdisk", randomIds);
+
     return toClean;
   } catch (err) {
     launchCleanup(resourceGroupName);
     console.log(err);
+
+    //Regenerate randomIds
+    resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+    vmName = _generateRandomId("testvm", randomIds);
+    storageAccountName = _generateRandomId("testac", randomIds);
+    vnetName = _generateRandomId("testvnet", randomIds);
+    subnetName = _generateRandomId("testsubnet", randomIds);
+    publicIPName = _generateRandomId("testpip", randomIds);
+    networkInterfaceName = _generateRandomId("testnic", randomIds);
+    ipConfigName = _generateRandomId("testcrpip", randomIds);
+    domainNameLabel = _generateRandomId("testdomainname", randomIds);
+    osDiskName = _generateRandomId("testosdisk", randomIds);
   }
 }
 
