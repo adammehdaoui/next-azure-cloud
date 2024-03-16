@@ -20,4 +20,3 @@ export default async function Home() {
 
   redirect("/dashboard", RedirectType.push);
 }
-                                                                                                                                                                                                                                            

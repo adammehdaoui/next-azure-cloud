@@ -8,9 +8,9 @@ Ce projet permet de lancer une machine virtuelle sur le cloud d'Azure. En foncti
 
 ## Notes importantes
 
-- Le projet a été testé dans un environnement MacOS Sonoma.
+- Le projet a été testé dans un environnement MacOS Sonoma et Node 21.
 - Le lancement d'une machine virtuelle peut prendre un certain temps.
-- **IMPORTANT** : il ne faut pas coupé le serveur avant que la suppression de la machine virtuelle et de son groupe de ressource au bout de 10 minutes ne soit terminée (Le nombre de machines virtuelles pour un utilisateur étant limité).
+- **IMPORTANT** : il ne faut pas couper le serveur avant que la suppression de la machine virtuelle et de son groupe de ressource au bout de 10 minutes ne soit terminée (Le nombre d'adresses IP dans une région étant limité à 3).
 
 ## Installation du projet
 
@@ -28,7 +28,7 @@ JWT_SECRET='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 
 #### Récupérer les identifiants Azure
 
-TODO 
+TODO
 
 #### Générer un JWT_SECRET (exemple : sous macOS)
 
@@ -61,7 +61,7 @@ Prérequis : avoir Node installé sur votre machine.
 Commandes à effectuer à la racine du projet :
 
 ```bash
-npm i && npm run dev
+npm i && npm run build && npm run start
 ```
 
 L'application est maintenant accessible depuis le port 3000.
@@ -75,7 +75,7 @@ Utilisateur **sans crédit** :
 Login : louis
 Mot de passe : user_restricted
 
-Utilisateur pouvant lancer **une machine virtuelle** *Ubuntu* :
+Utilisateur pouvant lancer **une machine virtuelle** _Ubuntu_ :
 
 Login : alexis
 Mot de passe: user_limited
