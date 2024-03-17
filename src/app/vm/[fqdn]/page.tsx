@@ -1,6 +1,6 @@
 "use client";
 
-import VMLogin from "@/components/VMLogin";
+import Login from "@/components/virtualMachines/Login";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 
@@ -15,11 +15,11 @@ export default function VMStateView() {
         <h1 className="text-xl">
           Informations de connexion à la machine virtuelle
         </h1>
-        <VMLogin
+        <Login
           text={`Se connecter à la machine en SSH avec la commande : ssh notadmin@${fqdn}`}
           textToCopy={`ssh notadmin@${fqdn}`}
         />
-        <VMLogin
+        <Login
           text={`Mot de passe pour se connecter : Pa$$w0rd92`}
           textToCopy="Pa$$w0rd92"
         />

@@ -1,7 +1,7 @@
 import AdminView from "@/components/AdminView";
 import { getAccessToken, getRole } from "@/utils/connection";
 import { launch } from "@/utils/create-vm";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 
 async function getFQDN(
   publisher: string | undefined,
@@ -11,7 +11,7 @@ async function getFQDN(
   const VMState = await launch(publisher, offer, sku);
 
   if (!VMState) {
-    return redirect("/dashboard?error=true");
+    return redirect("/dashboard?error=true", RedirectType.replace);
   }
 
   const { fqdn } = VMState;
@@ -28,7 +28,7 @@ async function handleCreation(
   const fqdn = await getFQDN(publisher, offer, sku);
 
   if (fqdn === undefined) {
-    return redirect("/dashboard?error=true");
+    return redirect("/dashboard?error=true", RedirectType.replace);
   }
 
   return redirect(`/vm/${fqdn}`);
@@ -38,7 +38,7 @@ export default async function Admin() {
   const token = await getAccessToken();
 
   if (token === undefined) {
-    return redirect("/?error=true");
+    return redirect("/?error=true", RedirectType.replace);
   }
 
   const tokenValue = JSON.parse(token).value;

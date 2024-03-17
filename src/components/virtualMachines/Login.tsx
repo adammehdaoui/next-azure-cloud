@@ -2,7 +2,7 @@
 
 import { LuClipboardCopy } from "react-icons/lu";
 
-export default function VMLogin({
+export default function Login({
   text,
   textToCopy,
 }: {

@@ -18,5 +18,5 @@ export default async function Home() {
     return <Form />;
   }
 
-  redirect("/dashboard", RedirectType.push);
+  redirect("/dashboard", RedirectType.replace);
 }

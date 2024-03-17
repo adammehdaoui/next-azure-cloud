@@ -1,12 +1,12 @@
 "use client";
 
-import LaunchButton from "@/components/LaunchButton";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
 
-import { vms } from "@/config/vms";
+import LimitedUser from "@/components/virtualMachines/LimitedUser";
+import PowerUser from "@/components/virtualMachines/PowerUser";
 
 export default function AdminView({
   role,
@@ -54,31 +54,12 @@ export default function AdminView({
           </p>
         )}
         <div className="flex justify-evenly mt-10 w-full">
-          <>
-            {role === "limitedUser" && (
-              <LaunchButton
-                creation={handleCreation}
-                name="Ubuntu"
-                image="ubuntu.svg"
-                loading={loading}
-              />
-            )}
-          </>
-          <>
-            {role === "powerUser" && (
-              <div className="flex space-x-5">
-                {vms.map((os, index) => (
-                  <LaunchButton
-                    creation={handleCreation}
-                    name={os.name}
-                    image={os.image}
-                    key={`${os.name}-${index}`}
-                    loading={loading}
-                  />
-                ))}
-              </div>
-            )}
-          </>
+          {role === "limitedUser" && (
+            <LimitedUser handleCreation={handleCreation} loading={loading} />
+          )}
+          {role === "powerUser" && (
+            <PowerUser handleCreation={handleCreation} loading={loading} />
+          )}
         </div>
         <div className="mt-10 w-full flex justify-center">
           {loading && (
