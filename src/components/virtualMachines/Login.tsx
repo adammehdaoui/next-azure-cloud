@@ -1,6 +1,7 @@
 "use client";
 
 import { LuClipboardCopy } from "react-icons/lu";
+import { useCallback } from "react";
 
 export default function Login({
   text,
@@ -9,9 +10,9 @@ export default function Login({
   text: string;
   textToCopy: string;
 }) {
-  function copyToClipboard() {
+  const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(textToCopy);
-  }
+  }, [textToCopy]);
 
   return (
     <div>

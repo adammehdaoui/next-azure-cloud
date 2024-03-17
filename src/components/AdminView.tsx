@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -23,14 +23,17 @@ export default function AdminView({
 
   const [loading, setLoading] = useState(false);
 
-  function handleCreation(
-    publisher: string | undefined,
-    offer: string | undefined,
-    sku: string | undefined
-  ) {
-    setLoading(true);
-    creation(publisher, offer, sku);
-  }
+  const handleCreation = useCallback(
+    (
+      publisher: string | undefined,
+      offer: string | undefined,
+      sku: string | undefined
+    ) => {
+      setLoading(true);
+      creation(publisher, offer, sku);
+    },
+    [creation]
+  );
 
   useEffect(() => {
     if (error) {

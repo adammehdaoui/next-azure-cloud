@@ -5,16 +5,16 @@ import DynamicDeconnectionButton from "@/components/DynamicDeconnectionButton";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  function toggleMenu() {
+  const toggleMenu = useCallback(() => {
     setIsMenuOpen(!isMenuOpen);
-  }
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const handleResize = () => {

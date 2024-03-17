@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useCallback } from "react";
 import { toast } from "sonner";
 
 import { vms } from "@/config/vms";
@@ -20,7 +21,7 @@ export default function LaunchButton({
   image: string;
   loading: boolean;
 }) {
-  function handleClick() {
+  const handleClick = useCallback(() => {
     const vm = vms.find((vm) => vm.name === name);
 
     creation(vm?.publisher, vm?.offer, vm?.sku);
@@ -28,7 +29,7 @@ export default function LaunchButton({
       "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
       { duration: 30000 }
     );
-  }
+  }, [creation, name]);
 
   return (
     <div className="flex flex-col items-center border rounded-3xl p-3 w-full shadow-md">
