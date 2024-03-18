@@ -1,6 +1,12 @@
 "use server";
 
-import { ComputeManagementClient, VirtualMachine } from "@azure/arm-compute";
+import type { VMInfo } from "@/utils/validators/vm-types";
+import {
+  ComputeManagementClient,
+  VirtualMachine,
+  VirtualMachineImageResource,
+} from "@azure/arm-compute";
+import type { PublicIPAddress, Subnet } from "@azure/arm-network";
 import { NetworkManagementClient } from "@azure/arm-network";
 import { ResourceManagementClient } from "@azure/arm-resources";
 import { StorageManagementClient } from "@azure/arm-storage";
@@ -9,29 +15,24 @@ import * as util from "util";
 
 import { delayedCleanup, launchCleanup } from "@/utils/cleanup-vm";
 
-export type VMInfo = {
-  fqdn: string;
-  resourceGroupName: string;
-};
-
 // Store function output to be used elsewhere
-let randomIds: { [key: string]: string } = {};
-let subnetInfo: any = null;
-let publicIPInfo: any = null;
+let randomIds: Record<string, string> = {};
+let subnetInfo: Subnet | null = null;
+let publicIPInfo: PublicIPAddress | null = null;
 let vmImageInfo: any = null;
 let nicInfo: any = null;
 
 //Random number generator for service names and settings
-let resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
-let vmName = _generateRandomId("testvm", randomIds);
-let storageAccountName = _generateRandomId("testac", randomIds);
-let vnetName = _generateRandomId("testvnet", randomIds);
-let subnetName = _generateRandomId("testsubnet", randomIds);
-let publicIPName = _generateRandomId("testpip", randomIds);
-let networkInterfaceName = _generateRandomId("testnic", randomIds);
-let ipConfigName = _generateRandomId("testcrpip", randomIds);
-let domainNameLabel = _generateRandomId("testdomainname", randomIds);
-let osDiskName = _generateRandomId("testosdisk", randomIds);
+let resourceGroupName = _generateRandomId("next-azure-groupname", randomIds);
+let vmName = _generateRandomId("next-azure-vm", randomIds);
+let storageAccountName = _generateRandomId("next-azure-storageacc", randomIds);
+let vnetName = _generateRandomId("next-azure-vnet", randomIds);
+let subnetName = _generateRandomId("next-azure-subnet", randomIds);
+let publicIPName = _generateRandomId("next-azure-publicip", randomIds);
+let networkInterfaceName = _generateRandomId("next-azure-nic", randomIds);
+let ipConfigName = _generateRandomId("next-azure-ipconfig", randomIds);
+let domainNameLabel = _generateRandomId("next-azure-domain", randomIds);
+let osDiskName = _generateRandomId("next-azure-osdisk", randomIds);
 
 // Resource configs
 const location = "eastus";
@@ -62,103 +63,85 @@ const storageClient = new StorageManagementClient(credentials, subscriptionId);
 const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 
 export async function launch(
-  publisher: string | undefined,
-  offer: string | undefined,
-  sku: string | undefined
-) {
-  if (!publisher || !offer || !sku) {
-    throw new Error(
-      "Il manque des informations pour lancer la machine virtuelle. Veuillez réessayer."
-    );
-  }
+  publisher: string,
+  offer: string,
+  sku: string
+): Promise<VMInfo> {
+  const VMState = await createResources(publisher, offer, sku);
 
-  try {
-    const toClean = await createResources(publisher, offer, sku);
-
-    if (toClean === undefined) {
-      throw new Error(
-        "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
-      );
-    }
-
-    delayedCleanup(toClean.resourceGroupName);
-
-    //Regenerate randomIds
-    resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
-    vmName = _generateRandomId("testvm", randomIds);
-    storageAccountName = _generateRandomId("testac", randomIds);
-    vnetName = _generateRandomId("testvnet", randomIds);
-    subnetName = _generateRandomId("testsubnet", randomIds);
-    publicIPName = _generateRandomId("testpip", randomIds);
-    networkInterfaceName = _generateRandomId("testnic", randomIds);
-    ipConfigName = _generateRandomId("testcrpip", randomIds);
-    domainNameLabel = _generateRandomId("testdomainname", randomIds);
-    osDiskName = _generateRandomId("testosdisk", randomIds);
-
-    return toClean;
-  } catch (err) {
+  if (VMState === undefined) {
     launchCleanup(resourceGroupName);
-    console.log(err);
-
-    //Regenerate randomIds
-    resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
-    vmName = _generateRandomId("testvm", randomIds);
-    storageAccountName = _generateRandomId("testac", randomIds);
-    vnetName = _generateRandomId("testvnet", randomIds);
-    subnetName = _generateRandomId("testsubnet", randomIds);
-    publicIPName = _generateRandomId("testpip", randomIds);
-    networkInterfaceName = _generateRandomId("testnic", randomIds);
-    ipConfigName = _generateRandomId("testcrpip", randomIds);
-    domainNameLabel = _generateRandomId("testdomainname", randomIds);
-    osDiskName = _generateRandomId("testosdisk", randomIds);
+    throw new Error(
+      "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
+    );
+  } else {
+    delayedCleanup(resourceGroupName);
   }
+
+  //Regenerate randomIds
+  resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+  vmName = _generateRandomId("testvm", randomIds);
+  storageAccountName = _generateRandomId("testac", randomIds);
+  vnetName = _generateRandomId("testvnet", randomIds);
+  subnetName = _generateRandomId("testsubnet", randomIds);
+  publicIPName = _generateRandomId("testpip", randomIds);
+  networkInterfaceName = _generateRandomId("testnic", randomIds);
+  ipConfigName = _generateRandomId("testcrpip", randomIds);
+  domainNameLabel = _generateRandomId("testdomainname", randomIds);
+  osDiskName = _generateRandomId("testosdisk", randomIds);
+
+  return VMState;
 }
 
 const createResources = async (
   publisher: string,
   offer: string,
   sku: string
-): Promise<VMInfo | undefined> => {
-  try {
-    await createResourceGroup();
-    await createStorageAccount();
-    await createVnet();
+): Promise<VMInfo> => {
+  await createResourceGroup();
+  await createStorageAccount();
+  await createVnet();
 
-    subnetInfo = await getSubnetInfo();
-    publicIPInfo = await createPublicIP();
+  subnetInfo = await getSubnetInfo();
+  publicIPInfo = await createPublicIP();
 
-    nicInfo = await createNIC(subnetInfo, publicIPInfo);
+  nicInfo = await createNIC(subnetInfo, publicIPInfo);
 
-    vmImageInfo = await findVMImage(publisher, offer, sku);
-    await createVirtualMachine(
-      nicInfo.id,
-      vmImageInfo[0].name,
-      publisher,
-      offer,
-      sku
+  vmImageInfo = await findVMImage(publisher, offer, sku);
+
+  await createVirtualMachine(
+    nicInfo.id,
+    vmImageInfo[0].name,
+    publisher,
+    offer,
+    sku
+  );
+
+  if (!publicIPInfo) {
+    throw new Error(
+      "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
     );
-    return {
-      fqdn: publicIPInfo.dnsSettings.fqdn,
-      resourceGroupName: resourceGroupName,
-    };
-  } catch (err) {
-    console.log(err);
   }
+
+  return {
+    fqdn: publicIPInfo.dnsSettings?.fqdn,
+    resourceGroupName: resourceGroupName,
+  } as VMInfo;
 };
 
-const createResourceGroup = async () => {
+const createResourceGroup = async (): Promise<void> => {
   const groupParameters = {
     location: location,
     tags: { sampletag: "sampleValue" },
   };
   console.log("\n1. Creating resource group : " + resourceGroupName);
-  return await resourceClient.resourceGroups.createOrUpdate(
+  await resourceClient.resourceGroups.createOrUpdate(
     resourceGroupName,
     groupParameters
   );
 };
 
-const createStorageAccount = async () => {
+const createStorageAccount = async (): Promise<void> => {
   console.log("\n2. Creating storage account : " + storageAccountName);
   const createParameters = {
     location: location,
@@ -171,14 +154,14 @@ const createStorageAccount = async () => {
       tag2: "val2",
     },
   };
-  return await storageClient.storageAccounts.beginCreateAndWait(
+  await storageClient.storageAccounts.beginCreateAndWait(
     resourceGroupName,
     storageAccountName,
     createParameters
   );
 };
 
-const createVnet = async () => {
+const createVnet = async (): Promise<void> => {
   const vnetParameters = {
     location: location,
     addressSpace: {
@@ -190,14 +173,14 @@ const createVnet = async () => {
     subnets: [{ name: subnetName, addressPrefix: "10.0.0.0/24" }],
   };
   console.log("\n3. Creating vnet : " + vnetName);
-  return await networkClient.virtualNetworks.beginCreateOrUpdateAndWait(
+  await networkClient.virtualNetworks.beginCreateOrUpdateAndWait(
     resourceGroupName,
     vnetName,
     vnetParameters
   );
 };
 
-const getSubnetInfo = async () => {
+const getSubnetInfo = async (): Promise<Subnet> => {
   console.log("\nGetting subnet info for : " + subnetName);
   return await networkClient.subnets.get(
     resourceGroupName,
@@ -206,7 +189,7 @@ const getSubnetInfo = async () => {
   );
 };
 
-const createPublicIP = async () => {
+const createPublicIP = async (): Promise<PublicIPAddress> => {
   const publicIPParameters = {
     location: location,
     publicIPAllocationMethod: "Dynamic",
@@ -222,7 +205,7 @@ const createPublicIP = async () => {
   );
 };
 
-const createNIC = async (subnetInfo: any, publicIPInfo: any) => {
+const createNIC = async (subnetInfo: Subnet, publicIPInfo: PublicIPAddress) => {
   const nicParameters = {
     location: location,
     ipConfigurations: [
@@ -242,7 +225,11 @@ const createNIC = async (subnetInfo: any, publicIPInfo: any) => {
   );
 };
 
-const findVMImage = async (publisher: string, offer: string, sku: string) => {
+const findVMImage = async (
+  publisher: string,
+  offer: string,
+  sku: string
+): Promise<VirtualMachineImageResource[]> => {
   console.log(
     util.format(
       "\nFinding a VM Image for location %s from " +
@@ -268,7 +255,7 @@ const createVirtualMachine = async (
   publisher: string,
   offer: string,
   sku: string
-) => {
+): Promise<void> => {
   const vmParameters: VirtualMachine = {
     location: location,
     osProfile: {
@@ -314,44 +301,6 @@ const createVirtualMachine = async (
   );
 };
 
-// Unused for now
-const manageResources = async () => {
-  await getVirtualMachines();
-  await turnOffVirtualMachines();
-  await startVirtualMachines();
-  await listVirtualMachines();
-};
-
-const getVirtualMachines = async () => {
-  console.log(`Get VM Info about ${vmName}`);
-  return await computeClient.virtualMachines.get(resourceGroupName, vmName);
-};
-
-const turnOffVirtualMachines = async () => {
-  console.log(`Poweroff the VM ${vmName}`);
-  return await computeClient.virtualMachines.beginPowerOff(
-    resourceGroupName,
-    vmName
-  );
-};
-
-const startVirtualMachines = async () => {
-  console.log(`Start the VM ${vmName}`);
-  return await computeClient.virtualMachines.beginStart(
-    resourceGroupName,
-    vmName
-  );
-};
-
-const listVirtualMachines = async () => {
-  console.log(`Lists VMs`);
-  const result = new Array();
-  for await (const item of computeClient.virtualMachines.listAll()) {
-    result.push(item);
-  }
-  console.log(result);
-};
-
 function _generateRandomId(
   prefix: string,
   existIds: { [key: string]: string }
@@ -382,3 +331,42 @@ function _generateRandomId(
 
   return newId;
 }
+
+// All of the following code is unused for now, but it can be used to manage the VMs
+
+// const manageResources = async () => {
+//   await getVirtualMachines();
+//   await turnOffVirtualMachines();
+//   await startVirtualMachines();
+//   await listVirtualMachines();
+// };
+
+// const getVirtualMachines = async () => {
+//   console.log(`Get VM Info about ${vmName}`);
+//   return await computeClient.virtualMachines.get(resourceGroupName, vmName);
+// };
+
+// const turnOffVirtualMachines = async () => {
+//   console.log(`Poweroff the VM ${vmName}`);
+//   return await computeClient.virtualMachines.beginPowerOff(
+//     resourceGroupName,
+//     vmName
+//   );
+// };
+
+// const startVirtualMachines = async () => {
+//   console.log(`Start the VM ${vmName}`);
+//   return await computeClient.virtualMachines.beginStart(
+//     resourceGroupName,
+//     vmName
+//   );
+// };
+
+// const listVirtualMachines = async () => {
+//   console.log(`Lists VMs`);
+//   const result = new Array();
+//   for await (const item of computeClient.virtualMachines.listAll()) {
+//     result.push(item);
+//   }
+//   console.log(result);
+// };

@@ -1,4 +1,6 @@
-export const users = [
+import type { User } from "@/utils/validators/user-types";
+
+export const users: Readonly<User[]> = [
   {
     name: "user-admin",
     password: "user-admin",
@@ -14,4 +16,4 @@ export const users = [
     password: "user-restricted",
     role: "restricedUser",
   },
-];
+] as const;

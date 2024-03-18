@@ -5,9 +5,9 @@ export default function LimitedUser({
   loading,
 }: {
   handleCreation: (
-    publisher: string | undefined,
-    offer: string | undefined,
-    sku: string | undefined,
+    publisher: string,
+    offer: string,
+    sku: string,
     windows: boolean
   ) => void;
   loading: boolean;

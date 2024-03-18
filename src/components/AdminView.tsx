@@ -12,11 +12,11 @@ export default function AdminView({
   role,
   creation,
 }: {
-  role: string | undefined;
+  role: string;
   creation: (
-    publisher: string | undefined,
-    offer: string | undefined,
-    sku: string | undefined,
+    publisher: string,
+    offer: string,
+    sku: string,
     windows: boolean
   ) => void;
 }) {
@@ -26,9 +26,9 @@ export default function AdminView({
 
   const handleCreation = useCallback(
     (
-      publisher: string | undefined,
-      offer: string | undefined,
-      sku: string | undefined,
+      publisher: string,
+      offer: string,
+      sku: string,
       windows: boolean
     ) => {
       setLoading(true);

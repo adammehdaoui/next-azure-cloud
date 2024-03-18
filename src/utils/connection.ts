@@ -28,22 +28,16 @@ export async function connection(formData: FormData) {
 }
 
 export async function deconnection() {
-  cookies().delete("accessToken");
+  deleteCookie();
   redirect("/");
-}
-
-export async function getUserConnected(login: string) {
-  const userFound = users.find((user) => user.name === login);
-
-  if (!userFound) {
-    throw new Error("User not found");
-  }
-
-  return { login: userFound.name, role: userFound.role };
 }
 
 export async function setCookie(token: string) {
   cookies().set("accessToken", token);
+}
+
+export async function deleteCookie() {
+  cookies().delete("accessToken");
 }
 
 export async function getAccessToken() {
@@ -70,6 +64,7 @@ export async function validateToken(token: string) {
   }
 }
 
+// Non catchable ver
 export async function isAlreadyConnected(token: string) {
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not defined");

@@ -13,7 +13,7 @@ export default async function VM() {
 
   const role = await getRole(tokenValue);
 
-  if (role === "undefined") {
+  if (role === undefined) {
     return redirect("/?error=true");
   }
 

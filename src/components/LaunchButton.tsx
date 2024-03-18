@@ -13,9 +13,9 @@ export default function LaunchButton({
   loading,
 }: {
   creation: (
-    publisher: string | undefined,
-    offer: string | undefined,
-    sku: string | undefined,
+    publisher: string,
+    offer: string,
+    sku: string,
     windows: boolean
   ) => void;
   name: string;
@@ -25,13 +25,17 @@ export default function LaunchButton({
   const handleClick = useCallback(() => {
     const vm = vms.find((vm) => vm.name === name);
 
-    const windows = name === "Windows";
+    if (vm) {
+      const windows = name === "Windows";
 
-    creation(vm?.publisher, vm?.offer, vm?.sku, windows);
-    toast.info(
-      "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
-      { duration: 30000 }
-    );
+      creation(vm.publisher, vm.offer, vm.sku, windows);
+      toast.info(
+        "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
+        { duration: 30000 }
+      );
+    } else {
+      throw new Error("VM not found");
+    }
   }, [creation, name]);
 
   return (

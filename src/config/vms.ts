@@ -1,4 +1,6 @@
-export const vms = [
+import type { VM } from "@/utils/validators/vm-types";
+
+export const vms: Readonly<VM[]> = [
   {
     name: "CentOS",
     image: "centOs.svg",

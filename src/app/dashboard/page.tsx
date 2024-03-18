@@ -14,7 +14,7 @@ export default async function Admin() {
 
   const role = await getRole(tokenValue);
 
-  if (role === "undefined") {
+  if (role === undefined) {
     return redirect("/?error=true");
   }
 

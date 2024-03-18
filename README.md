@@ -26,7 +26,7 @@ AZURE_SUBSCRIPTION_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 JWT_SECRET='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 ```
 
-***Exemple pour générer une clef pour le JWT_SECRET sous MacOS :***
+**_Exemple pour générer une clef pour le JWT_SECRET sous MacOS :_**
 
 ```bash
 openssl rand -base64 32
@@ -81,7 +81,7 @@ Utilisateur **sans crédit** :
 Login : user-restricted
 Mot de passe : user-restricted
 
-## Connection aux machines virtuelles
+## Connexion aux machines virtuelles
 
 ### Machines Unix
 
@@ -93,3 +93,4 @@ Le port 22 (SSH) est ouvert par défaut.
 Pour se connecter à une machine virtuelle Windows, il vous faudra pouvoir utiliser le protocole RDP.
 Pour cela, vous pouvez utiliser l'application **Microsoft Remote Desktop** disponible sur l'App Store.
 Il y a également la possibilité d'utiliser le client open-source **FreeRDP**.
+Plus d'informations seront affichées sur la page sur laquelle vous serez redirigé.

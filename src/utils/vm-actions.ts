@@ -4,9 +4,9 @@ import { launch } from "@/utils/create-vm";
 import { RedirectType, redirect } from "next/navigation";
 
 export async function handleCreation(
-  publisher: string | undefined,
-  offer: string | undefined,
-  sku: string | undefined,
+  publisher: string,
+  offer: string,
+  sku: string,
   windows: boolean
 ) {
   const fqdn = await getFQDN(publisher, offer, sku);
@@ -19,9 +19,9 @@ export async function handleCreation(
 }
 
 async function getFQDN(
-  publisher: string | undefined,
-  offer: string | undefined,
-  sku: string | undefined
+  publisher: string,
+  offer: string,
+  sku: string
 ) {
   const VMState = await launch(publisher, offer, sku);
 
