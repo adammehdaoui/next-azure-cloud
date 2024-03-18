@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const token = await getAccessToken();
 
-  console.log(token);
-
   if (token === undefined) {
     return <Form />;
   }
@@ -14,10 +12,9 @@ export default async function Home() {
   try {
     const tokenValue = JSON.parse(token).value;
     await validateToken(tokenValue);
+    redirect("/dashboard");
   } catch (error) {
     console.error(error);
     return <Form />;
   }
-
-  redirect("/dashboard");
 }
