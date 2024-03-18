@@ -12,8 +12,6 @@ export default function Form() {
 
   const requestError = useSearchParams().get("error");
 
-  console.log(requestError);
-
   useEffect(() => {
     if (requestError) {
       toast.error("Vous n'aviez pas les droits pour accéder à cette page");

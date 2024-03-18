@@ -1,25 +1,21 @@
-"use client";
+import StateView from "@/components/virtualMachines/StateView";
+import { getAccessToken, getRole } from "@/utils/connection";
+import { RedirectType, redirect } from "next/navigation";
 
-import UnixStateView from "@/components/virtualMachines/UnixStateView";
-import WindowsStateView from "@/components/virtualMachines/WindowsStateView";
-import { useParams, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+export default async function VM() {
+  const token = await getAccessToken();
 
-export default function VMStateView() {
-  const { fqdn } = useParams();
-  const windows = useSearchParams().get("windows");
+  if (token === undefined) {
+    return redirect("/?error=true", RedirectType.replace);
+  }
 
-  toast.info("La machine virtuelle sera supprimée dans 10 minutes");
+  const tokenValue = JSON.parse(token).value;
 
-  return (
-    <div className="h-screen flex items-center justify-center bg-gray-100 w-full">
-      <div className="flex flex-col bg-white p-8 rounded-xl shadow-md w-1/2 space-y-5">
-        {windows ? (
-          <WindowsStateView fqdn={fqdn} />
-        ) : (
-          <UnixStateView fqdn={fqdn} />
-        )}
-      </div>
-    </div>
-  );
+  const role = await getRole(tokenValue);
+
+  if (role === "undefined") {
+    return redirect("/?error=true");
+  }
+
+  return <StateView />;
 }
