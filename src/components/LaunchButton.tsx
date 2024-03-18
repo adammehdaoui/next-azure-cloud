@@ -15,7 +15,8 @@ export default function LaunchButton({
   creation: (
     publisher: string | undefined,
     offer: string | undefined,
-    sku: string | undefined
+    sku: string | undefined,
+    windows: boolean
   ) => void;
   name: string;
   image: string;
@@ -24,7 +25,9 @@ export default function LaunchButton({
   const handleClick = useCallback(() => {
     const vm = vms.find((vm) => vm.name === name);
 
-    creation(vm?.publisher, vm?.offer, vm?.sku);
+    const windows = name === "Windows";
+
+    creation(vm?.publisher, vm?.offer, vm?.sku, windows);
     toast.info(
       "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
       { duration: 30000 }

@@ -8,7 +8,8 @@ export default function PowerUser({
   handleCreation: (
     publisher: string | undefined,
     offer: string | undefined,
-    sku: string | undefined
+    sku: string | undefined,
+    windows: boolean
   ) => void;
   loading: boolean;
 }) {

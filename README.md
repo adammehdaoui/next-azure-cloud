@@ -16,7 +16,7 @@ Ce projet permet de lancer une machine virtuelle sur le cloud d'Azure. En foncti
 
 ### Remplir le fichier .env
 
-Voici un exemple de fichier .env :
+Voici comment le fichier .env doit être rempli :
 
 ```bash
 AZURE_CLIENT_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
@@ -26,11 +26,7 @@ AZURE_SUBSCRIPTION_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 JWT_SECRET='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 ```
 
-#### Récupérer les identifiants Azure
-
-TODO
-
-#### Générer un JWT_SECRET (exemple : sous macOS)
+***Exemple pour générer une clef pour le JWT_SECRET sous MacOS :***
 
 ```bash
 openssl rand -base64 32
@@ -70,20 +66,20 @@ L'application est maintenant accessible depuis le port 3000.
 
 L'accès à la plateforme nécessite une authentification. Trois utilisateurs ont été préconfigurés pour faciliter le processus. Veuillez utiliser les informations d'identification suivantes :
 
+Utilisateur pouvant lancer **trois machines virtuelles avec un OS différent** (CentOS, Windows, Ubuntu)
+
+Login : user-admin
+Mot de passe : user-admin
+
+Utilisateur pouvant lancer **une machine virtuelle** Ubuntu :
+
+Login : user-contributor
+Mot de passe : user-contributor
+
 Utilisateur **sans crédit** :
 
-Login : louis
-Mot de passe : user_restricted
-
-Utilisateur pouvant lancer **une machine virtuelle** _Ubuntu_ :
-
-Login : alexis
-Mot de passe: user_limited
-
-Utilisateur pouvant lancer **trois machines virtuelles avec un OS différent** (CentOS, Windows, Ubuntu):
-
-Login : adam
-Mot de passe: user_power
+Login : user-restricted
+Mot de passe : user-restricted
 
 ## Connection aux machines virtuelles
 
@@ -92,7 +88,7 @@ Mot de passe: user_power
 Appliquer les commandes qui seront affichées dans l'application lorsque vous serez redirigé vers la page de la machine virtuelle.
 Le port 22 (SSH) est ouvert par défaut.
 
-### Machines Windows (Testé sous MacOS)
+### Machines Windows (testé sous MacOS)
 
 Pour se connecter à une machine virtuelle Windows, il vous faudra pouvoir utiliser le protocole RDP.
 Pour cela, vous pouvez utiliser l'application **Microsoft Remote Desktop** disponible sur l'App Store.

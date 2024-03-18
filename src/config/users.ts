@@ -1,12 +1,12 @@
 export const users = [
   {
     name: "user-admin",
-    password: "user-power",
+    password: "user-admin",
     role: "powerUser",
   },
   {
     name: "user-contributor",
-    password: "user-limited",
+    password: "user-contributor",
     role: "limitedUser",
   },
   {

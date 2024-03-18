@@ -16,10 +16,11 @@ export default function AdminView({
   creation: (
     publisher: string | undefined,
     offer: string | undefined,
-    sku: string | undefined
+    sku: string | undefined,
+    windows: boolean
   ) => void;
 }) {
-  const error = !!useSearchParams().get("error");
+  const error = useSearchParams().get("error");
 
   const [loading, setLoading] = useState(false);
 
@@ -27,10 +28,11 @@ export default function AdminView({
     (
       publisher: string | undefined,
       offer: string | undefined,
-      sku: string | undefined
+      sku: string | undefined,
+      windows: boolean
     ) => {
       setLoading(true);
-      creation(publisher, offer, sku);
+      creation(publisher, offer, sku, windows);
     },
     [creation]
   );

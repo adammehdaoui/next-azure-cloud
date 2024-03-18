@@ -3,7 +3,7 @@
 import { LuClipboardCopy } from "react-icons/lu";
 import { useCallback } from "react";
 
-export default function Login({
+export default function LoginInfo({
   text,
   textToCopy,
 }: {

@@ -6,7 +6,8 @@ import { RedirectType, redirect } from "next/navigation";
 export async function handleCreation(
   publisher: string | undefined,
   offer: string | undefined,
-  sku: string | undefined
+  sku: string | undefined,
+  windows: boolean
 ) {
   const fqdn = await getFQDN(publisher, offer, sku);
 
@@ -14,7 +15,7 @@ export async function handleCreation(
     return redirect("/dashboard?error=true", RedirectType.replace);
   }
 
-  return redirect(`/vm/${fqdn}`);
+  return redirect(`/vm/${fqdn}?windows=${windows}`, RedirectType.replace);
 }
 
 async function getFQDN(

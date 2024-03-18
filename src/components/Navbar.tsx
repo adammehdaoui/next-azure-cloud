@@ -51,7 +51,7 @@ export default function Navbar() {
         </ul>
         {pathname != "/" && (
           <div className="-mt-3">
-            <DeconnectionButton isMenuOpen={isMenuOpen} />
+            <DeconnectionButton />
           </div>
         )}
         <>

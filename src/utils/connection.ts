@@ -54,6 +54,10 @@ export async function validateToken(token: string) {
   try {
     const decodedToken = verify(token, process.env.JWT_SECRET || "");
 
+    if (token === undefined) {
+      throw new Error("Token not found");
+    }
+
     if (typeof decodedToken === "string") {
       throw new Error("Invalid token type");
     }

@@ -8,11 +8,7 @@ function handleDeconnection() {
   toast.info("Vous êtes déconnecté");
 }
 
-export default function DeconnectionButton({
-  isMenuOpen,
-}: {
-  isMenuOpen: boolean;
-}) {
+export default function DeconnectionButton() {
   return (
     <button
       onClick={handleDeconnection}
