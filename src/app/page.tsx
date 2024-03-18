@@ -1,5 +1,5 @@
 import Form from "@/components/Form";
-import { getAccessToken, validateToken } from "@/utils/connection";
+import { getAccessToken, isAlreadyConnected } from "@/utils/connection";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -11,10 +11,11 @@ export default async function Home() {
 
   try {
     const tokenValue = JSON.parse(token).value;
-    await validateToken(tokenValue);
-    redirect("/dashboard");
+    await isAlreadyConnected(tokenValue);
   } catch (error) {
     console.error(error);
     return <Form />;
   }
+
+  redirect("/dashboard");
 }

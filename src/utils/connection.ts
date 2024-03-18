@@ -51,12 +51,14 @@ export async function getAccessToken() {
 }
 
 export async function validateToken(token: string) {
-  try {
-    const decodedToken = verify(token, process.env.JWT_SECRET || "");
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
 
-    if (token === undefined) {
-      throw new Error("Token not found");
-    }
+  const jwt = process.env.JWT_SECRET;
+
+  try {
+    const decodedToken = verify(token, jwt);
 
     if (typeof decodedToken === "string") {
       throw new Error("Invalid token type");
@@ -66,6 +68,22 @@ export async function validateToken(token: string) {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function isAlreadyConnected(token: string) {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
+
+  const jwt = process.env.JWT_SECRET;
+
+  const decodedToken = verify(token, jwt);
+
+  if (typeof decodedToken === "string") {
+    throw new Error("Invalid token type");
+  }
+
+  return decodedToken;
 }
 
 export async function getRole(token: string): Promise<string | undefined> {
