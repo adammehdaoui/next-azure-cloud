@@ -1,16 +1,19 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-# Next Azure Cloud
+# Next Azure Cloud ✨
+
+Repository du projet : [github.com/adammehdaoui/next-azure-cloud](https://github.com/adammehdaoui/next-azure-cloud)
 
 ## Description du projet
 
 Ce projet permet de lancer une machine virtuelle sur le cloud d'Azure. En fonction des droits de l'utilisateur connecté, il est possible de lancer ou non une machine virtuelle d'un système d'exploitation donné.
+L'application renvoie ensuite les étapes pour se connecter à ces machines virtuelles (SSH pour une machine Unix ou RDP avec Microsoft Remote Desktop sur MacOS pour une machine Windows).
 
 ## Notes importantes
 
 - Le projet a été testé dans un environnement MacOS Sonoma et Node 21.
-- Le lancement d'une machine virtuelle peut prendre un certain temps.
-- **IMPORTANT** : il ne faut pas couper le serveur avant que la suppression de la machine virtuelle et de son groupe de ressource au bout de 10 minutes ne soit terminée (Le nombre d'adresses IP dans une région étant limité à 3).
+- Le lancement d'une machine virtuelle peut prendre un certain temps en fonction de la configuration choisie.
+- **SUPER IMPORTANT** : il ne faut pas couper le serveur avant que la suppression de la machine virtuelle et de son groupe de ressource au bout de 10 minutes ne soit terminée (Le nombre d'adresses IP dans une région étant limité à 3).
 
 ## Installation du projet
 
@@ -25,6 +28,8 @@ AZURE_TENANT_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 AZURE_SUBSCRIPTION_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 JWT_SECRET='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 ```
+
+TODO : vérifier si SUBSCRIPTION_ID peut suffire
 
 **_Exemple pour générer une clef pour le JWT_SECRET sous MacOS :_**
 
@@ -68,18 +73,15 @@ L'accès à la plateforme nécessite une authentification. Trois utilisateurs on
 
 Utilisateur pouvant lancer **trois machines virtuelles avec un OS différent** (CentOS, Windows, Ubuntu)
 
-Login : user-admin
-Mot de passe : user-admin
+Login : **user-admin**; Mot de passe : **user-admin**
 
 Utilisateur pouvant lancer **une machine virtuelle** Ubuntu :
 
-Login : user-contributor
-Mot de passe : user-contributor
+Login : **user-contributor**; Mot de passe : **user-contributor**
 
 Utilisateur **sans crédit** :
 
-Login : user-restricted
-Mot de passe : user-restricted
+Login : **user-restricted**; Mot de passe : **user-restricted**
 
 ## Connexion aux machines virtuelles
 
@@ -94,3 +96,48 @@ Pour se connecter à une machine virtuelle Windows, il vous faudra pouvoir utili
 Pour cela, vous pouvez utiliser l'application **Microsoft Remote Desktop** disponible sur l'App Store.
 Il y a également la possibilité d'utiliser le client open-source **FreeRDP**.
 Plus d'informations seront affichées sur la page sur laquelle vous serez redirigé.
+
+## Documentation du code source
+
+L'application est développée avec le framework Next.js (basé sur la librairie React).
+Le framework permet une fonction Back avec les server actions et routes handlers (qui gérerons ici les appels Azure et la connexion des utilisateurs)
+
+Dépendances notables du projet :
+
+- TypeScript
+- TailwindCSS
+- Azure SDK : https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-azure-sdk/create-manage-virtual-machine
+- react-icons : https://react-icons.github.io/react-icons/
+- jsonwebtoken
+- sonner : https://sonner.emilkowal.ski/
+
+### Structure du projet
+
+Le projet suit la structure _app router_ introduit dans Next 13.
+
+- src/app : contient la logique des routes accessibles côté client
+- src/components : contient les composants React appelés dans les pages principales (dans src/app)
+- src/config : contient la configuration de base de l'application (la configuration de l'image des VM entre autre)
+- src/utils : contient la logique de création des vms et de leur nettoyage ainsi que la gestion de la connexion des utilisateurs à l'application (token JWT + cookies)
+- src/utils/validators : types principaux utilisés dans le code source TypeScript.
+
+### Création/Suppression des VM
+
+La création des VM se fait sur la route /dashboard.
+Une fois le bouton cliqué on a ces étapes gérés par la SDK d'Azure et appelées dans le fichier _src/utils/create-vm.ts avec la fonction \_launch_ :
+
+1. Création du groupe de ressource
+2. Création du compte de stockage
+3. Création du réseau virtuel et de ses sous-réseaux
+4. Création d'une adresse IP publique
+5. Création de l'interface réseau
+6. Création de la machine virtuelle à partir d'une image avec récupération des informations récupérées auparavant dans les étapes précédentes.
+
+**IMPORTANT** : Si l'une des étapes fail (exemple : trop de machines virtuelles sont déjà enregistrées sur le même comptes), alors le nettoyage géré dans le fichier src/utils/cleanup-vm.ts par launchCleanup est appelé immédiatement.
+
+Si toutes les étapes se déroulent correctement, alors le nettoyage sera appelé 10 minutes plus tard avec un setTimeout de JavaScript (c'est alors la fonction wrapper de launchCleanup **delayedCleanup** qui sera appelée).
+
+## Améliorations possibles
+
+- Choix de la région de création d'une VM (nécessite une identification des images qui sont disponibles dans les régions principales pour éviter les erreurs).
+- Création d'une base de données si le nombre de d'utilisateurs vient à augmenter, pour l'instant incohérent pour trois utilisateurs.

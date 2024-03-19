@@ -3,7 +3,7 @@ import LoginInfo from "@/components/virtualMachines/LoginInfo";
 export default function UnixStateView({fqdn}: {fqdn: string | string[]}) {
   return (
     <>
-      <h1 className="text-xl">
+      <h1 className="text-xl font-semibold">
         Informations de connexion à la machine virtuelle
       </h1>
       <LoginInfo

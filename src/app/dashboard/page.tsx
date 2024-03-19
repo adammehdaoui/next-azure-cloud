@@ -3,7 +3,7 @@ import { getAccessToken, getRole } from "@/utils/connection";
 import { handleCreation } from "@/utils/vm-actions";
 import { RedirectType, redirect } from "next/navigation";
 
-export default async function Admin() {
+export default async function Dashboard() {
   const token = await getAccessToken();
 
   if (token === undefined) {

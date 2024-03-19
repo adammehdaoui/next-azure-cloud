@@ -1,7 +1,7 @@
 "use client";
 
-import { LuClipboardCopy } from "react-icons/lu";
 import { useCallback } from "react";
+import { LuClipboardCopy } from "react-icons/lu";
 
 export default function LoginInfo({
   text,
@@ -16,8 +16,8 @@ export default function LoginInfo({
 
   return (
     <div>
-      <p className="overflow-scroll">{text}</p>
-      <button onClick={copyToClipboard} className="flex text-blue-500">
+      <p>{text}</p>
+      <button onClick={copyToClipboard} className="flex text-blue-500 mt-3">
         <LuClipboardCopy />
         <span className="ml-2 -mt-1">Copier</span>
       </button>

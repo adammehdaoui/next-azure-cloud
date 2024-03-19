@@ -31,7 +31,7 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <div className="font-semibold text-yellow-500">
+    <div className="font-semibold text-amber-300">
       <nav className="fixed top-0 bg-white w-full p-8 shadow-md flex justify-between">
         <ul className="flex ml-3 items-center">
           <li className="w-28">
@@ -45,8 +45,11 @@ export default function Navbar() {
               />
             </Link>
           </li>
-          <li className="text-xl hidden sm:block">
-            <Link href="/dashboard">Dashboard</Link>
+          <li className="text-xl hidden md:block border-l border-r px-4">
+            <Link href="/dashboard">Tableau de bord</Link>
+          </li>
+          <li className="text-xl hidden md:block ml-5 border-l border-r px-4">
+            <Link href="/rules">Règles</Link>
           </li>
         </ul>
         {pathname != "/" && (
@@ -55,7 +58,7 @@ export default function Navbar() {
           </div>
         )}
         <>
-          <button onClick={toggleMenu} className="sm:hidden">
+          <button onClick={toggleMenu} className="md:hidden">
             <RxHamburgerMenu className="text-3xl mt-3 mr-3" />
           </button>
         </>

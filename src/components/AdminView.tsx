@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -25,12 +25,7 @@ export default function AdminView({
   const [loading, setLoading] = useState(false);
 
   const handleCreation = useCallback(
-    (
-      publisher: string,
-      offer: string,
-      sku: string,
-      windows: boolean
-    ) => {
+    (publisher: string, offer: string, sku: string, windows: boolean) => {
       setLoading(true);
       creation(publisher, offer, sku, windows);
     },
@@ -49,8 +44,11 @@ export default function AdminView({
 
   return (
     <div className="flex items-center justify-center mt-56">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
-        <p className="flex justify-center text-xl w-full">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2">
+        <h1 className="text-xl font-semibold text-center border-b py-5">
+          Tableau de bord
+        </h1>
+        <p className="flex justify-center text-xl w-full mt-5">
           Bienvenue, vous êtes connecté en tant que : {role}
         </p>
         {role === "restricedUser" && (
