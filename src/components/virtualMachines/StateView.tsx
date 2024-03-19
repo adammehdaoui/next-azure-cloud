@@ -1,13 +1,13 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
 import UnixStateView from "@/components/virtualMachines/UnixStateView";
 import WindowsStateView from "@/components/virtualMachines/WindowsStateView";
+import { useParams, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 export default function StateView() {
   const { fqdn } = useParams();
-  const windows = useSearchParams().get("windows");
+  const windows = useSearchParams().get("windows") === "true";
 
   toast.info("La machine virtuelle sera supprimée dans 10 minutes");
 

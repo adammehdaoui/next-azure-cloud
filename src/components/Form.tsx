@@ -10,7 +10,7 @@ export default function Form() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const requestError = useSearchParams().get("error");
+  const requestError = useSearchParams().get("error") === "true";
 
   useEffect(() => {
     if (requestError) {

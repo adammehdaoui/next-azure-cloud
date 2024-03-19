@@ -1,6 +1,6 @@
 "use server";
 
-import type { VMInfo } from "@/utils/validators/vm-types";
+import type { PublicIPWrapper, SubnetWrapper, VMInfo } from "@/utils/validators/vm-types";
 import {
   ComputeManagementClient,
   VirtualMachine,
@@ -17,22 +17,22 @@ import { delayedCleanup, launchCleanup } from "@/utils/cleanup-vm";
 
 // Store function output to be used elsewhere
 let randomIds: Record<string, string> = {};
-let subnetInfo: Subnet | null = null;
-let publicIPInfo: PublicIPAddress | null = null;
+let subnetInfo: SubnetWrapper = null;
+let publicIPInfo: PublicIPWrapper = null;
 let vmImageInfo: any = null;
 let nicInfo: any = null;
 
 //Random number generator for service names and settings
-let resourceGroupName = _generateRandomId("next-azure-groupname", randomIds);
-let vmName = _generateRandomId("next-azure-vm", randomIds);
-let storageAccountName = _generateRandomId("next-azure-storageacc", randomIds);
-let vnetName = _generateRandomId("next-azure-vnet", randomIds);
-let subnetName = _generateRandomId("next-azure-subnet", randomIds);
-let publicIPName = _generateRandomId("next-azure-publicip", randomIds);
-let networkInterfaceName = _generateRandomId("next-azure-nic", randomIds);
-let ipConfigName = _generateRandomId("next-azure-ipconfig", randomIds);
-let domainNameLabel = _generateRandomId("next-azure-domain", randomIds);
-let osDiskName = _generateRandomId("next-azure-osdisk", randomIds);
+let resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+let vmName = _generateRandomId("testvm", randomIds);
+let storageAccountName = _generateRandomId("testac", randomIds);
+let vnetName = _generateRandomId("testvnet", randomIds);
+let subnetName = _generateRandomId("testsubnet", randomIds);
+let publicIPName = _generateRandomId("testpip", randomIds);
+let networkInterfaceName = _generateRandomId("testnic", randomIds);
+let ipConfigName = _generateRandomId("testcrpip", randomIds);
+let domainNameLabel = _generateRandomId("testdomainname", randomIds);
+let osDiskName = _generateRandomId("testosdisk", randomIds);
 
 // Resource configs
 const location = "eastus";
@@ -63,23 +63,39 @@ const storageClient = new StorageManagementClient(credentials, subscriptionId);
 const networkClient = new NetworkManagementClient(credentials, subscriptionId);
 
 export async function launch(
-  publisher: string,
-  offer: string,
-  sku: string
-): Promise<VMInfo> {
-  const VMState = await createResources(publisher, offer, sku);
-
-  if (VMState === undefined) {
-    launchCleanup(resourceGroupName);
+  publisher: string | undefined,
+  offer: string | undefined,
+  sku: string | undefined
+) {
+  if (!publisher || !offer || !sku) {
     throw new Error(
-      "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
+      "Il manque des informations pour lancer la machine virtuelle. Veuillez réessayer."
     );
-  } else {
-    delayedCleanup(resourceGroupName);
   }
 
-  //Regenerate randomIds
-  resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
+  try {
+    const VMState = await createResources(publisher, offer, sku);
+
+    if (VMState === undefined) {
+      throw new Error(
+        "Erreur dans la création de la machine virtuelle et de son groupe de ressource, veuillez réessayer."
+      );
+    }
+
+    delayedCleanup(resourceGroupName);
+
+    return VMState;
+  } catch (err) {
+    launchCleanup(resourceGroupName);
+    console.log(err);
+  }
+
+  //regenerate random ids
+  generateIds();
+}
+
+const generateIds = () => {
+  resourceGroupName = _generateRandomId("next-resour", randomIds);
   vmName = _generateRandomId("testvm", randomIds);
   storageAccountName = _generateRandomId("testac", randomIds);
   vnetName = _generateRandomId("testvnet", randomIds);
@@ -89,9 +105,7 @@ export async function launch(
   ipConfigName = _generateRandomId("testcrpip", randomIds);
   domainNameLabel = _generateRandomId("testdomainname", randomIds);
   osDiskName = _generateRandomId("testosdisk", randomIds);
-
-  return VMState;
-}
+};
 
 const createResources = async (
   publisher: string,
@@ -303,7 +317,7 @@ const createVirtualMachine = async (
 
 function _generateRandomId(
   prefix: string,
-  existIds: { [key: string]: string }
+  existIds: Record<string, string>
 ): string {
   const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
   const idLength = 8;
