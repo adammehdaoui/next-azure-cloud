@@ -23,7 +23,7 @@ export async function delayedCleanup(
       "La suppression de la machine virtuelle est en cours. Veuillez ne pas quitter la page."
     );
     launchCleanup(resourceGroupName);
-  }, 1000000);
+  }, 600000);
 
   return () => {
     clearTimeout(timeout);

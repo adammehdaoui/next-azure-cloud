@@ -1,13 +1,13 @@
 "use server";
 
-import type { PublicIPWrapper, SubnetWrapper, VMInfo } from "@/utils/validators/vm-types";
+import type { VMInfo } from "@/utils/validators/vm-types";
 import {
   ComputeManagementClient,
   VirtualMachine,
   VirtualMachineImageResource,
 } from "@azure/arm-compute";
 import type { PublicIPAddress, Subnet } from "@azure/arm-network";
-import { NetworkManagementClient } from "@azure/arm-network";
+import { NetworkInterface, NetworkManagementClient } from "@azure/arm-network";
 import { ResourceManagementClient } from "@azure/arm-resources";
 import { StorageManagementClient } from "@azure/arm-storage";
 import { DefaultAzureCredential } from "@azure/identity";
@@ -17,22 +17,22 @@ import { delayedCleanup, launchCleanup } from "@/utils/cleanup-vm";
 
 // Store function output to be used elsewhere
 let randomIds: Record<string, string> = {};
-let subnetInfo: SubnetWrapper = null;
-let publicIPInfo: PublicIPWrapper = null;
-let vmImageInfo: any = null;
-let nicInfo: any = null;
+let subnetInfo: Subnet;
+let publicIPInfo: PublicIPAddress;
+let vmImageInfo: VirtualMachineImageResource[];
+let nicInfo: NetworkInterface;
 
 //Random number generator for service names and settings
-let resourceGroupName = _generateRandomId("diberry-testrg", randomIds);
-let vmName = _generateRandomId("testvm", randomIds);
-let storageAccountName = _generateRandomId("testac", randomIds);
-let vnetName = _generateRandomId("testvnet", randomIds);
-let subnetName = _generateRandomId("testsubnet", randomIds);
-let publicIPName = _generateRandomId("testpip", randomIds);
-let networkInterfaceName = _generateRandomId("testnic", randomIds);
-let ipConfigName = _generateRandomId("testcrpip", randomIds);
-let domainNameLabel = _generateRandomId("testdomainname", randomIds);
-let osDiskName = _generateRandomId("testosdisk", randomIds);
+let resourceGroupName = _generateRandomId("nextrg", randomIds);
+let vmName = _generateRandomId("nextvm", randomIds);
+let storageAccountName = _generateRandomId("nextac", randomIds);
+let vnetName = _generateRandomId("nextvnet", randomIds);
+let subnetName = _generateRandomId("nextsubnet", randomIds);
+let publicIPName = _generateRandomId("nextpip", randomIds);
+let networkInterfaceName = _generateRandomId("nextnic", randomIds);
+let ipConfigName = _generateRandomId("nextcrpip", randomIds);
+let domainNameLabel = _generateRandomId("nextdomainname", randomIds);
+let osDiskName = _generateRandomId("nextosdisk", randomIds);
 
 // Resource configs
 const location = "eastus";
@@ -89,23 +89,7 @@ export async function launch(
     launchCleanup(resourceGroupName);
     console.log(err);
   }
-
-  //regenerate random ids
-  generateIds();
 }
-
-const generateIds = () => {
-  resourceGroupName = _generateRandomId("next-resour", randomIds);
-  vmName = _generateRandomId("testvm", randomIds);
-  storageAccountName = _generateRandomId("testac", randomIds);
-  vnetName = _generateRandomId("testvnet", randomIds);
-  subnetName = _generateRandomId("testsubnet", randomIds);
-  publicIPName = _generateRandomId("testpip", randomIds);
-  networkInterfaceName = _generateRandomId("testnic", randomIds);
-  ipConfigName = _generateRandomId("testcrpip", randomIds);
-  domainNameLabel = _generateRandomId("testdomainname", randomIds);
-  osDiskName = _generateRandomId("testosdisk", randomIds);
-};
 
 const createResources = async (
   publisher: string,
@@ -122,6 +106,10 @@ const createResources = async (
   nicInfo = await createNIC(subnetInfo, publicIPInfo);
 
   vmImageInfo = await findVMImage(publisher, offer, sku);
+
+  if (nicInfo.id === undefined) {
+    throw new Error("Erreur dans la création de l'interface réseau.");
+  }
 
   await createVirtualMachine(
     nicInfo.id,

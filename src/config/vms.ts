@@ -13,7 +13,7 @@ export const vms: Readonly<VM[]> = [
     image: "windows.svg",
     publisher: "MicrosoftWindowsServer",
     offer: "WindowsServer",
-    sku: "2019-datacenter-core",
+    sku: "2022-datacenter-core",
   },
   {
     name: "Ubuntu",

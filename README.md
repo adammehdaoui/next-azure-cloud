@@ -29,7 +29,23 @@ AZURE_SUBSCRIPTION_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 JWT_SECRET='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 ```
 
-TODO : vérifier si SUBSCRIPTION_ID peut suffire
+**La suite de la documentation explique comment récupérer les valeurs nécessaires pour remplir ce fichier avec vos informations Azure.**
+
+Pour l'instant seul AZURE_SUBSCRIPTION_ID est nécessaire pour lancer l'application. Les autres variables sont nécessaires pour les appels à l'API Azure à venir.
+
+Étapes pour récupérer **AZURE_SUBSCRIPTION_ID** :
+
+- Se connecter à Azure Portal
+- Rechercher les abonnements, puis cliquer sur l'abonnement souhaité.
+- Récupérer l'ID (valeur) de l'abonnement et l'intégrer dans le fichier .env.
+
+Étapes pour récupérer **AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID** :
+
+- Se connecter à Azure Portal
+- Recherchez les inscriptions d'applications, puis cliquez sur "Nouvelle inscription".
+- Cliquez ensuite sur inscrire après avoir configuré votre applicatuin.
+- Générez un secret client pour l'application dans les informations d'identification.
+- Une fois l'application créée, assurez-vous de récupérer le **AZURE Tenant ID**, le **AZURE Client ID** et le **AZURE Client Secret** afin de les intégrer dans le fichier .env.
 
 **_Exemple pour générer une clef pour le JWT_SECRET sous MacOS :_**
 
@@ -94,6 +110,7 @@ Le port 22 (SSH) est ouvert par défaut.
 
 Pour se connecter à une machine virtuelle Windows, il vous faudra pouvoir utiliser le protocole RDP.
 Pour cela, vous pouvez utiliser l'application **Microsoft Remote Desktop** disponible sur l'App Store.
+**Pour se connecter avec le nom d'utilisateur et le mot de passe, veuillez sélectionner "Ask when required" lors de la configuration**.
 Il y a également la possibilité d'utiliser le client open-source **FreeRDP**.
 Plus d'informations seront affichées sur la page sur laquelle vous serez redirigé.
 
@@ -123,6 +140,7 @@ Le projet suit la structure _app router_ introduit dans Next 13.
 
 ### Création/Suppression des VM
 
+Il est important de noter que pour la création et la suppression des VM, nous sommes partis d'un sample de code fourni par Microsoft Azure : [Lien du repository](https://github.com/Azure-Samples/js-e2e/blob/main/resources/virtual-machines/create-vm.js).
 La création des VM se fait sur la route /dashboard.
 Une fois le bouton cliqué on a ces étapes gérés par la SDK d'Azure et appelées dans le fichier _src/utils/create-vm.ts avec la fonction \_launch_ :
 
@@ -141,3 +159,8 @@ Si toutes les étapes se déroulent correctement, alors le nettoyage sera appel�
 
 - Choix de la région de création d'une VM (nécessite une identification des images qui sont disponibles dans les régions principales pour éviter les erreurs).
 - Création d'une base de données si le nombre de d'utilisateurs vient à augmenter, pour l'instant incohérent pour trois utilisateurs.
+
+## Bugs connus
+
+- **N'IMPACTE PAS L'UTILISATEUR** : En mode conteneurisé, la fonction redirect de next/navigation lance une erreur interne côté serveur. Cela n'impacte pas l'utilisateur final, car la redirection se fait correctement.
+  Il s'agit d'un bug connu de Next.js qui demande le passage de Next en version canary : [Lien vers l'issue](https://github.com/vercel/next.js/issues/53392)
