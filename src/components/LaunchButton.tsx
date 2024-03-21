@@ -31,7 +31,7 @@ export default function LaunchButton({
       creation(vm.publisher, vm.offer, vm.sku, windows);
       toast.info(
         "La VM est en cours de création, vous serez redirigé vers la page de connexion une fois qu'elle sera prête.",
-        { duration: 30000 }
+        { duration: 60000 }
       );
     } else {
       throw new Error("VM not found");

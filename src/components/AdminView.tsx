@@ -20,7 +20,8 @@ export default function AdminView({
     windows: boolean
   ) => void;
 }) {
-  const error = useSearchParams().get("error");
+  const error = useSearchParams().get("error") === "true";
+  const cleanup = useSearchParams().get("cleanup") === "true";
 
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +41,13 @@ export default function AdminView({
       );
       setLoading(false);
     }
-  }, [error]);
+
+    if (cleanup) {
+      toast.success("La machine virtuelle a été supprimée avec succès", {
+        duration: 60000,
+      });
+    }
+  }, [error, cleanup]);
 
   return (
     <div className="flex items-center justify-center mt-56">

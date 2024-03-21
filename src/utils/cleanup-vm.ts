@@ -2,6 +2,7 @@
 
 import { ResourceManagementClient } from "@azure/arm-resources";
 import { DefaultAzureCredential } from "@azure/identity";
+import { redirect } from "next/navigation";
 
 // Azure platform authentication
 const clientId = process.env.AZURE_CLIENT_ID;
@@ -37,6 +38,7 @@ export async function launchCleanup(resourceGroupName: string): Promise<void> {
     );
 
     await deleteResourceGroup(resourceGroupName);
+
     console.log(
       "Successfully deleted the resource group and assigned VMs : " +
         resourceGroupName
