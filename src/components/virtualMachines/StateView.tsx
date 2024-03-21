@@ -10,11 +10,11 @@ export default function StateView() {
   const { fqdn } = useParams();
   const windows = useSearchParams().get("windows") === "true";
 
-  toast.info("La machine virtuelle sera supprimée dans 10 minutes", {
-    duration: 60000,
-  });
-
   useEffect(() => {
+    toast.info("La machine virtuelle sera supprimée dans 10 minutes", {
+      duration: 60000,
+    });
+
     const timeout = setTimeout(() => {
       toast.success("Votre machine virtuelle a été supprimée", {
         duration: 60000,

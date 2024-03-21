@@ -1,10 +1,10 @@
 export default function RulesComponent() {
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100 w-full">
+    <div className="h-screen flex items-center justify-center bg-gray-100 w-full mt-16">
       <div className="flex flex-col bg-white p-8 rounded-xl shadow-md w-full md:w-1/2 space-y-5">
         <p className="text-xl font-semibold">Règles de l&rsquo;Application</p>
         <div className="py-4 border-b border-gray-300">
-          <p className="text-red-700 font-extrabold">*! IMPORTANT !*</p>
+          <p className="text-red-700 font-extrabold">IMPORTANT !</p>
           <p className="mt-3">
             Ne pas couper le serveur avant que la suppression de la machine
             virtuelle et de son groupe de ressource au bout de 10 minutes ne

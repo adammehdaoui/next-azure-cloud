@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-# Next Azure Cloud ✨
+# Next Azure Cloud 💫 - Projet de machines virtuelles éphémères
 
 Repository du projet : [github.com/adammehdaoui/next-azure-cloud](https://github.com/adammehdaoui/next-azure-cloud)
 
@@ -140,9 +140,9 @@ Le projet suit la structure _app router_ introduit dans Next 13.
 
 ### Création/Suppression des VM
 
-Il est important de noter que pour la création et la suppression des VM, nous sommes partis d'un sample de code fourni par Microsoft Azure : [Lien du repository](https://github.com/Azure-Samples/js-e2e/blob/main/resources/virtual-machines/create-vm.js).
+Il est important de noter que pour gérer la création et la suppression des VM, nous sommes partis d'un sample de code fourni par Microsoft Azure : [Lien du repository](https://github.com/Azure-Samples/js-e2e/blob/main/resources/virtual-machines/create-vm.js).
 La création des VM se fait sur la route /dashboard.
-Une fois le bouton cliqué on a ces étapes gérés par la SDK d'Azure et appelées dans le fichier _src/utils/create-vm.ts avec la fonction \_launch_ :
+Une fois le bouton cliqué on a ces étapes gérés par la SDK d'Azure et appelées dans le fichier _src/utils/create-vm.ts_ avec la fonction _launch_ :
 
 1. Création du groupe de ressource
 2. Création du compte de stockage
