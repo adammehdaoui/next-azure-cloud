@@ -65,8 +65,14 @@ export default function Navbar() {
       </nav>
       {isMenuOpen && (
         <div className="flex flex-col mt-28 pb-10 bg-white items-center shadow-md w-full">
-          <Link href="/dashboard" className="text-xl mt-10">
+          <Link
+            href="/dashboard"
+            className="text-xl mt-10 border-l border-r px-5"
+          >
             Dashboard
+          </Link>
+          <Link href="/rules" className="text-xl mt-10 border-l border-r px-5 ">
+            Règles
           </Link>
           <>{pathname != "/" && <DynamicDeconnectionButton />}</>
         </div>

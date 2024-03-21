@@ -42,9 +42,9 @@ Pour l'instant seul AZURE_SUBSCRIPTION_ID est nécessaire pour lancer l'applicat
 Étapes pour récupérer **AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID** :
 
 - Se connecter à Azure Portal
-- Recherchez les inscriptions d'applications, puis cliquez sur "Nouvelle inscription".
-- Cliquez ensuite sur inscrire après avoir configuré votre applicatuin.
-- Générez un secret client pour l'application dans les informations d'identification.
+- Recherchr les inscriptions d'applications, puis cliquez sur "Nouvelle inscription".
+- Cliquer ensuite sur inscrire après avoir configuré votre applicatuin.
+- Générer un secret client pour l'application dans les informations d'identification.
 - Une fois l'application créée, assurez-vous de récupérer le **AZURE Tenant ID**, le **AZURE Client ID** et le **AZURE Client Secret** afin de les intégrer dans le fichier .env.
 
 **_Exemple pour générer une clef pour le JWT_SECRET sous MacOS :_**
