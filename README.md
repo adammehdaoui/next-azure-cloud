@@ -53,6 +53,18 @@ Pour l'instant seul AZURE_SUBSCRIPTION_ID est nécessaire pour lancer l'applicat
 openssl rand -base64 32
 ```
 
+### Sans docker
+
+Prérequis : avoir Node installé sur votre machine.
+
+Commandes à effectuer à la racine du projet :
+
+```bash
+npm i && npm run build && npm run start
+```
+
+L'application est maintenant accessible depuis le port 3000.
+
 ### Avec docker
 
 Prérequis : avoir Docker installé sur votre machine.
@@ -67,18 +79,6 @@ et
 
 ```bash
 docker run -it -p 3000:3000 next-azure-cloud
-```
-
-L'application est maintenant accessible depuis le port 3000.
-
-### Sans docker
-
-Prérequis : avoir Node installé sur votre machine.
-
-Commandes à effectuer à la racine du projet :
-
-```bash
-npm i && npm run build && npm run start
 ```
 
 L'application est maintenant accessible depuis le port 3000.
@@ -140,7 +140,7 @@ Le projet suit la structure _app router_ introduit dans Next 13.
 
 ### Création/Suppression des VM
 
-Il est important de noter que pour gérer la création et la suppression des VM, nous sommes partis d'un sample de code fourni par Microsoft Azure : [Lien du repository](https://github.com/Azure-Samples/js-e2e/blob/main/resources/virtual-machines/create-vm.js).
+Il est important de noter que pour gérer la création et la suppression des VM, nous sommes partis d'un sample de code fourni par Microsoft Azure : [Lien du repository](https://github.com/Azure-Samples/js-e2e/blob/main/resources/virtual-machines/create-vm.js). On a alors utilisé ce code dans un server action.
 La création des VM se fait sur la route /dashboard.
 Une fois le bouton cliqué on a ces étapes gérés par la SDK d'Azure et appelées dans le fichier _src/utils/create-vm.ts_ avec la fonction _launch_ :
 

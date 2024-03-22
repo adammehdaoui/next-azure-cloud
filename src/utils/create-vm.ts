@@ -7,32 +7,13 @@ import {
   VirtualMachineImageResource,
 } from "@azure/arm-compute";
 import type { PublicIPAddress, Subnet } from "@azure/arm-network";
-import { NetworkInterface, NetworkManagementClient } from "@azure/arm-network";
+import { NetworkManagementClient } from "@azure/arm-network";
 import { ResourceManagementClient } from "@azure/arm-resources";
 import { StorageManagementClient } from "@azure/arm-storage";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as util from "util";
 
 import { delayedCleanup, launchCleanup } from "@/utils/cleanup-vm";
-
-// Store function output to be used elsewhere
-let randomIds: Record<string, string> = {};
-let subnetInfo: Subnet;
-let publicIPInfo: PublicIPAddress;
-let vmImageInfo: VirtualMachineImageResource[];
-let nicInfo: NetworkInterface;
-
-//Random number generator for service names and settings
-let resourceGroupName = _generateRandomId("nextrg", randomIds);
-let vmName = _generateRandomId("nextvm", randomIds);
-let storageAccountName = _generateRandomId("nextac", randomIds);
-let vnetName = _generateRandomId("nextvnet", randomIds);
-let subnetName = _generateRandomId("nextsubnet", randomIds);
-let publicIPName = _generateRandomId("nextpip", randomIds);
-let networkInterfaceName = _generateRandomId("nextnic", randomIds);
-let ipConfigName = _generateRandomId("nextcrpip", randomIds);
-let domainNameLabel = _generateRandomId("nextdomainname", randomIds);
-let osDiskName = _generateRandomId("nextosdisk", randomIds);
 
 // Resource configs
 const location = "eastus";
@@ -73,8 +54,34 @@ export async function launch(
     );
   }
 
+  //Random number generator for service names and settings
+  const resourceGroupName = _generateRandomId("nextrg");
+  const vmName = _generateRandomId("nextvm");
+  const storageAccountName = _generateRandomId("nextac");
+  const vnetName = _generateRandomId("nextvnet");
+  const subnetName = _generateRandomId("nextsubnet");
+  const publicIPName = _generateRandomId("nextpip");
+  const networkInterfaceName = _generateRandomId("nextnic");
+  const ipConfigName = _generateRandomId("nextcrpip");
+  const domainNameLabel = _generateRandomId("nextdomainname");
+  const osDiskName = _generateRandomId("nextosdisk");
+
   try {
-    const VMState = await createResources(publisher, offer, sku);
+    const VMState = await createResources(
+      publisher,
+      offer,
+      sku,
+      resourceGroupName,
+      storageAccountName,
+      subnetName,
+      vnetName,
+      domainNameLabel,
+      publicIPName,
+      ipConfigName,
+      networkInterfaceName,
+      vmName,
+      osDiskName
+    );
 
     if (VMState === undefined) {
       throw new Error(
@@ -94,18 +101,42 @@ export async function launch(
 const createResources = async (
   publisher: string,
   offer: string,
-  sku: string
+  sku: string,
+  resourceGroupName: string,
+  storageAccountName: string,
+  subnetName: string,
+  vnetName: string,
+  domainNameLabel: string,
+  publicIPName: string,
+  ipConfigName: string,
+  networkInterfaceName: string,
+  vmName: string,
+  osDiskName: string
 ): Promise<VMInfo> => {
-  await createResourceGroup();
-  await createStorageAccount();
-  await createVnet();
+  await createResourceGroup(resourceGroupName);
+  await createStorageAccount(storageAccountName, resourceGroupName);
+  await createVnet(subnetName, vnetName, resourceGroupName);
 
-  subnetInfo = await getSubnetInfo();
-  publicIPInfo = await createPublicIP();
+  const subnetInfo = await getSubnetInfo(
+    subnetName,
+    resourceGroupName,
+    vnetName
+  );
+  const publicIPInfo = await createPublicIP(
+    domainNameLabel,
+    publicIPName,
+    resourceGroupName
+  );
 
-  nicInfo = await createNIC(subnetInfo, publicIPInfo);
+  const nicInfo = await createNIC(
+    subnetInfo,
+    publicIPInfo,
+    ipConfigName,
+    networkInterfaceName,
+    resourceGroupName
+  );
 
-  vmImageInfo = await findVMImage(publisher, offer, sku);
+  const vmImageInfo = await findVMImage(publisher, offer, sku);
 
   if (nicInfo.id === undefined) {
     throw new Error("Erreur dans la création de l'interface réseau.");
@@ -116,7 +147,10 @@ const createResources = async (
     vmImageInfo[0].name,
     publisher,
     offer,
-    sku
+    sku,
+    vmName,
+    osDiskName,
+    resourceGroupName
   );
 
   if (!publicIPInfo) {
@@ -131,7 +165,9 @@ const createResources = async (
   } as VMInfo;
 };
 
-const createResourceGroup = async (): Promise<void> => {
+const createResourceGroup = async (
+  resourceGroupName: string
+): Promise<void> => {
   const groupParameters = {
     location: location,
     tags: { sampletag: "sampleValue" },
@@ -143,7 +179,10 @@ const createResourceGroup = async (): Promise<void> => {
   );
 };
 
-const createStorageAccount = async (): Promise<void> => {
+const createStorageAccount = async (
+  storageAccountName: string,
+  resourceGroupName: string
+): Promise<void> => {
   console.log("\n2. Creating storage account : " + storageAccountName);
   const createParameters = {
     location: location,
@@ -163,7 +202,11 @@ const createStorageAccount = async (): Promise<void> => {
   );
 };
 
-const createVnet = async (): Promise<void> => {
+const createVnet = async (
+  subnetName: string,
+  vnetName: string,
+  resourceGroupName: string
+): Promise<void> => {
   const vnetParameters = {
     location: location,
     addressSpace: {
@@ -182,7 +225,11 @@ const createVnet = async (): Promise<void> => {
   );
 };
 
-const getSubnetInfo = async (): Promise<Subnet> => {
+const getSubnetInfo = async (
+  subnetName: string,
+  resourceGroupName: string,
+  vnetName: string
+): Promise<Subnet> => {
   console.log("\nGetting subnet info for : " + subnetName);
   return await networkClient.subnets.get(
     resourceGroupName,
@@ -191,7 +238,11 @@ const getSubnetInfo = async (): Promise<Subnet> => {
   );
 };
 
-const createPublicIP = async (): Promise<PublicIPAddress> => {
+const createPublicIP = async (
+  domainNameLabel: string,
+  publicIPName: string,
+  resourceGroupName: string
+): Promise<PublicIPAddress> => {
   const publicIPParameters = {
     location: location,
     publicIPAllocationMethod: "Dynamic",
@@ -207,7 +258,13 @@ const createPublicIP = async (): Promise<PublicIPAddress> => {
   );
 };
 
-const createNIC = async (subnetInfo: Subnet, publicIPInfo: PublicIPAddress) => {
+const createNIC = async (
+  subnetInfo: Subnet,
+  publicIPInfo: PublicIPAddress,
+  ipConfigName: string,
+  networkInterfaceName: string,
+  resourceGroupName: string
+) => {
   const nicParameters = {
     location: location,
     ipConfigurations: [
@@ -256,7 +313,10 @@ const createVirtualMachine = async (
   vmImageVersionNumber: string,
   publisher: string,
   offer: string,
-  sku: string
+  sku: string,
+  vmName: string,
+  osDiskName: string,
+  resourceGroupName: string
 ): Promise<void> => {
   const vmParameters: VirtualMachine = {
     location: location,
@@ -303,35 +363,11 @@ const createVirtualMachine = async (
   );
 };
 
-function _generateRandomId(
-  prefix: string,
-  existIds: Record<string, string>
-): string {
-  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
-  const idLength = 8;
-
-  const generateRandomString = (): string => {
-    let result = "";
-    for (let i = 0; i < idLength; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-    return result;
-  };
-
-  let newId;
-  while (true) {
-    newId = prefix + generateRandomString();
-    if (
-      !existIds ||
-      (!(newId in existIds) && newId.length >= 3 && newId.length <= 24)
-    ) {
-      break;
-    }
-  }
-
-  return newId;
+function _generateRandomId(prefix: string): string {
+  const timestamp = new Date().getTime().toString(36);
+  const random = Math.random().toString(36).substr(2, 8);
+  const id = `${prefix}${timestamp}${random}`;
+  return id;
 }
 
 // All of the following code is unused for now, but it can be used to manage the VMs
