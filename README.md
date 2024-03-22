@@ -6,7 +6,7 @@ Repository du projet : [github.com/adammehdaoui/next-azure-cloud](https://github
 
 ## Description du projet
 
-Ce projet permet de lancer une machine virtuelle sur le cloud d'Azure. En fonction des droits de l'utilisateur connecté, il est possible de lancer ou non une machine virtuelle d'un système d'exploitation donné.
+Ce projet permet de lancer une machine virtuelle avec un nouveau groupe de ressource propre sur le cloud d'Azure. En fonction des droits de l'utilisateur connecté, il est possible de lancer ou non une machine virtuelle d'un système d'exploitation donné.
 L'application renvoie ensuite les étapes pour se connecter à ces machines virtuelles (SSH pour une machine Unix ou RDP avec Microsoft Remote Desktop sur MacOS pour une machine Windows).
 
 ## Notes importantes
@@ -19,7 +19,7 @@ L'application renvoie ensuite les étapes pour se connecter à ces machines virt
 
 ### Remplir le fichier .env
 
-Voici comment le fichier .env doit être rempli :
+Voici comment le fichier .env doit être rempli **(comment récupérer ces valeurs plus bas dans la documentation) :**
 
 ```bash
 AZURE_CLIENT_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'

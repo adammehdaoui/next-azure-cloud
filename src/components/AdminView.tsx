@@ -1,5 +1,6 @@
 "use client";
 
+import { Role } from "@/utils/validators/roles";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
@@ -58,17 +59,18 @@ export default function AdminView({
         <p className="flex justify-center text-xl w-full mt-5">
           Bienvenue, vous êtes connecté en tant que : {role}
         </p>
-        {role === "restricedUser" && (
-          <p className="mt-3">
-            Vous n&rsquo;avez aucun crédit pour lancer une machine virtuelle...
-          </p>
-        )}
         <div className="flex justify-evenly mt-10 w-full">
-          {role === "limitedUser" && (
+          {role === Role.RestrictedUser ? (
+            <p className="mt-3">
+              Vous n&rsquo;avez aucun crédit pour lancer une machine
+              virtuelle...
+            </p>
+          ) : role === Role.LimitedUser ? (
             <LimitedUser handleCreation={handleCreation} loading={loading} />
-          )}
-          {role === "powerUser" && (
-            <PowerUser handleCreation={handleCreation} loading={loading} />
+          ) : (
+            role === Role.PowerUser && (
+              <PowerUser handleCreation={handleCreation} loading={loading} />
+            )
           )}
         </div>
         <div className="mt-10 w-full flex justify-center">
