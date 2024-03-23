@@ -4,6 +4,24 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 Repository du projet : [github.com/adammehdaoui/next-azure-cloud](https://github.com/adammehdaoui/next-azure-cloud)
 
+## Sommaire
+
+- [Description du projet](#description-du-projet)
+- [Notes importantes](#notes-importantes)
+- [Installation du projet](#installation-du-projet)
+  - [Remplir le fichier .env](#remplir-le-fichier-env)
+  - [Sans docker](#sans-docker)
+  - [Avec docker](#avec-docker)
+- [Authentification](#authentification)
+- [Connexion aux machines virtuelles](#connexion-aux-machines-virtuelles)
+  - [Machines Unix](#machines-unix)
+  - [Machines Windows (testé sous MacOS)](#machines-windows-testé-sous-macos)
+- [Documentation du code source](#documentation-du-code-source)
+  - [Structure du projet](#structure-du-projet)
+  - [Création/Suppression des VM](#créationsuppression-des-vm)
+- [Améliorations possibles](#améliorations-possibles)
+- [Bugs connus](#bugs-connus)
+
 ## Description du projet
 
 Ce projet permet de lancer une machine virtuelle avec un nouveau groupe de ressource propre sur le cloud d'Azure. En fonction des droits de l'utilisateur connecté, il est possible de lancer ou non une machine virtuelle d'un système d'exploitation donné.
@@ -42,8 +60,8 @@ Pour l'instant seul AZURE_SUBSCRIPTION_ID est nécessaire pour lancer l'applicat
 Étapes pour récupérer **AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID** :
 
 - Se connecter à Azure Portal
-- Recherchr les inscriptions d'applications, puis cliquez sur "Nouvelle inscription".
-- Cliquer ensuite sur inscrire après avoir configuré votre applicatuin.
+- Rechercher les inscriptions d'applications, puis cliquez sur "Nouvelle inscription".
+- Cliquer ensuite sur inscrire après avoir configuré votre application.
 - Générer un secret client pour l'application dans les informations d'identification.
 - Une fois l'application créée, assurez-vous de récupérer le **AZURE Tenant ID**, le **AZURE Client ID** et le **AZURE Client Secret** afin de les intégrer dans le fichier .env.
 
